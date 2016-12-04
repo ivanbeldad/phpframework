@@ -6,6 +6,8 @@
  */
 
 namespace Akimah\Database;
+use Akimah\Model\Table;
+use Akimah\Model\TableAccess;
 
 
 interface Database
@@ -18,5 +20,15 @@ interface Database
     function status();
 
     function execute($query);
+
+    function createTable($name, TableAccess $structure);
+
+    function dropTable($name);
+
+//    function insert($structure);
+//
+//    function update($structure);
+//
+//    function delete($structure);
 
 }

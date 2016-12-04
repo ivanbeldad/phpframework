@@ -6,6 +6,9 @@
  */
 
 namespace Akimah\Database;
+use Akimah\Model\Table;
+use Akimah\Model\TableAccess;
+use Akimah\Model\TableFieldAccess;
 
 
 class MysqlDatabase implements Database
@@ -58,14 +61,52 @@ class MysqlDatabase implements Database
 
     function execute($query)
     {
+        $this->connect();
         if (!$this->status()) return false;
-        return mysqli_query($this->link, $query);
+        $result = mysqli_query($this->link, $query);
+        if (mysqli_error($this->link)) {
+            $result = mysqli_error($this->link);
+        }
+        $this->disconnect();
+        return $result;
+    }
+
+    function createTable($name, TableAccess $structure)
+    {
+        $fields = $structure->getTableFields();
+        $query = "CREATE TABLE $name (";
+        $stringFields = [];
+        foreach ($fields as $field) {
+            array_push($stringFields, $this->createTableField($field));
+        }
+        $stringFields = join(" , ", $stringFields);
+        $query .= $stringFields;
+        $query .= ");";
+        echo $query;
+        return $this->execute($query);
+    }
+
+    private function createTableField(TableFieldAccess $field)
+    {
+        $string = "";
+        $string .= $field->getName() . " ";
+        $string .= $field->getType() . "(" . $field->getSize() . ") ";
+        $string .= $field->isAutoIncrement() . " ";
+        $string .= $field->isPrimaryKey() . " ";
+        $string .= $field->isNullable() . " ";
+        return $string;
+    }
+
+    function dropTable($name)
+    {
+        $query = "DROP TABLE $name";
+        return $this->execute($query);
     }
 
     private function configurate()
     {
         $string = "";
-        $file = fopen(DatabaseController::getConfigPath(), "r") or die("MUEREEE!");
+        $file = fopen(DatabaseFactory::getConfigPath(), "r") or die("MUEREEE!");
         while (!feof($file)) {
             $string .= fgets($file);
         }
