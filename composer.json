@@ -1,0 +1,12 @@
+{
+    "name": "akimah/framework",
+    "description": "Custom framework.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ivan de la Beldad Fernandez",
+            "email": "a.ivan@opmbx.org"
+        }
+    ],
+    "require": {}
+}
