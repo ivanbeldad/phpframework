@@ -1,0 +1,10 @@
+{
+  "database_configuration": {
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "database": "aroa",
+    "type": "mysql",
+    "port": 3306
+  }
+}
