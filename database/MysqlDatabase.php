@@ -8,7 +8,7 @@
 namespace Akimah\Database;
 use Akimah\Model\Table;
 use Akimah\Model\TableAccess;
-use Akimah\Model\TableFieldAccess;
+use Akimah\Model\FieldAccess;
 
 
 class MysqlDatabase implements Database
@@ -21,13 +21,13 @@ class MysqlDatabase implements Database
     private $database;
     private $port;
 
-    function __construct()
+    public function __construct()
     {
         $this->configurate();
         mysqli_report(MYSQLI_REPORT_STRICT);
     }
 
-    function connect()
+    public function connect()
     {
         if ($this->host === "") throw new Exception("");
 
@@ -43,13 +43,13 @@ class MysqlDatabase implements Database
         }
     }
 
-    function disconnect()
+    public function disconnect()
     {
         mysqli_close($this->link);
         unset($this->link);
     }
 
-    function status() {
+    public function status() {
         $this->host;
         $this->user;
         $this->password;
@@ -59,7 +59,7 @@ class MysqlDatabase implements Database
         return false;
     }
 
-    function execute($query)
+    public function execute($query)
     {
         $this->connect();
         if (!$this->status()) return false;
@@ -71,8 +71,9 @@ class MysqlDatabase implements Database
         return $result;
     }
 
-    function createTable($tableName, TableAccess $structure)
+    public function createTable(TableAccess $structure)
     {
+        $tableName = $structure->getTableName();
         $fields = $structure->getTableFields();
         $query = "CREATE TABLE $tableName (";
         $stringFields = [];
@@ -82,36 +83,36 @@ class MysqlDatabase implements Database
         $stringFields = join(" , ", $stringFields);
         $query .= $stringFields;
         $query .= ");";
-//        echo $query;
         return $this->execute($query);
     }
 
-    function dropTable($tableName)
+    public function dropTable(TableAccess $structure)
     {
+        $tableName = $structure->getTableName();
         $query = "DROP TABLE $tableName";
         return $this->execute($query);
     }
 
-    function insert($tableName, TableAccess $structure) {
+    public function insert(TableAccess $structure) {
+        $tableName = $structure->getTableName();
         if ($structure->invalidInsertRequirements()) return false;
-
         $keys = $structure->getAllSettedNames();
         $keys = join(",", $keys);
         $values = $structure->getAllSettedValues();
         $values = join(",", $values);
-
         $query = "INSERT INTO " . $tableName . " ($keys) VALUES ($values)";
         return DatabaseFactory::getDatabase()->execute($query);
     }
 
-    private function createTableField(TableFieldAccess $field)
+    private function createTableField(FieldAccess $field)
     {
         $string = "";
         $string .= $field->getName() . " ";
-        $string .= $field->getType() . "(" . $field->getSize() . ") ";
+        $string .= $field->getType() . $field->getSizeString() . " ";
         $string .= $field->isAutoIncrementString() . " ";
         $string .= $field->isPrimaryKeyString() . " ";
         $string .= $field->isNullableString() . " ";
+        $string .= $field->getDefaultValueString() . " ";
         return $string;
     }
 

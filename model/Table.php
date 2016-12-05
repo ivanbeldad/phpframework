@@ -11,25 +11,47 @@ namespace Akimah\Model;
 class Table
 {
 
+    protected $tableName;
     protected $tableFields = [];
 
-    function int($name, $length = 8)
+    public function int($name, $length = 8)
     {
-        $newField = new TableField($name, TableField::FIELD_INT, $length);
+        $newField = new Field($name, Field::FIELD_INT, $length);
         array_push($this->tableFields, $newField);
         return $newField;
     }
 
-    function string($name, $max_length = 255)
+    public function string($name, $max_length = 255)
     {
-        $newField = new TableField($name, TableField::FIELD_STRING, $max_length);
+        $newField = new Field($name, Field::FIELD_STRING, $max_length);
         array_push($this->tableFields, $newField);
         return $newField;
     }
 
-    function decimal($name, $digits = 8, $decimals = 2)
+    public function decimal($name, $digits = 8, $decimals = 2)
     {
-        $newField = new TableField($name, TableField::FIELD_DECIMAL, $digits . "," . $decimals);
+        $newField = new Field($name, Field::FIELD_DECIMAL, $digits . "," . $decimals);
+        array_push($this->tableFields, $newField);
+        return $newField;
+    }
+
+    public function date($name)
+    {
+        $newField = new Field($name, Field::FIELD_DATE);
+        array_push($this->tableFields, $newField);
+        return $newField;
+    }
+
+    public function time($name)
+    {
+        $newField = new Field($name, Field::FIELD_TIME);
+        array_push($this->tableFields, $newField);
+        return $newField;
+    }
+
+    public function datetime($name)
+    {
+        $newField = new Field($name, Field::FIELD_DATETIME);
         array_push($this->tableFields, $newField);
         return $newField;
     }

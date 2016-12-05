@@ -11,40 +11,50 @@ namespace Akimah\Model;
 class TableAccess extends Table
 {
 
-    private $table;
-
-    function __construct(Table $table = null)
+    function __construct(Table $table)
     {
-        $this->table = $table;
-        if($this->table === null) $this->table = new Table();
+        $this->tableName = $table->tableName;
+        $this->tableFields = $this->convertFields($table);
     }
 
-    /**
-     * @return TableFieldAccess[]
-     */
-    public function getTableFields()
+    private function convertFields(Table $table)
     {
         $accessFields = [];
-        foreach($this->table->tableFields as $tableField) {
-            array_push($accessFields, new TableFieldAccess($tableField));
+        foreach($table->tableFields as $tableField) {
+            array_push($accessFields, new FieldAccess($tableField));
         }
         return $accessFields;
     }
 
-    function showAll()
+    public function getTableName()
     {
-        foreach ($this->getTableFields as $field) {
-            if (!$field instanceof TableFieldAccess) return;
+        return $this->tableName;
+    }
+
+    public function setTableName($tableName)
+    {
+        $this->tableName = $tableName;
+    }
+
+    public function getTableFields()
+    {
+        return $this->tableFields;
+    }
+
+    public function showAll()
+    {
+        foreach ($this->getTableFields() as $field) {
+            if (!$field instanceof FieldAccess) return;
             echo $field->toString() . "<br>";
         }
     }
 
-    function invalidInsertRequirements()
+    public function invalidInsertRequirements()
     {
         foreach($this->getTableFields() as $field) {
             $value = $field->getValue();
             if(!isset($value) || $value === "") {
-                if (!$field->isNullable() && !$field->isAutoIncrement()) {
+                if (!$field->isNullable() && !$field->isAutoIncrement() && !$field->isDefaultValue()) {
                     return true;
                 }
             }
@@ -52,11 +62,11 @@ class TableAccess extends Table
         return false;
     }
 
-    function getAllSettedNames()
+    public function getAllSettedNames()
     {
         $names = [];
         foreach ($this->getTableFields() as $tableField) {
-            $value = $tableField->getName();
+            $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
                 array_push($names, $tableField->getName());
             }
@@ -64,11 +74,11 @@ class TableAccess extends Table
         return $names;
     }
 
-    function getAllSettedValues()
+    public function getAllSettedValues()
     {
         $values = [];
         foreach ($this->getTableFields() as $tableField) {
-            $value = $tableField->getName();
+            $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
                 array_push($values, "'" . $tableField->getValue() . "'");
             }

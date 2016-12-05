@@ -21,14 +21,14 @@ interface Database
 
     function execute($query);
 
-    function createTable($tableName, TableAccess $structure);
+    function createTable(TableAccess $structure);
 
-    function dropTable($tableName);
+    function dropTable(TableAccess $structure);
 
-//    function insert($structure);
-//
+    function insert(TableAccess $structure);
+
 //    function update($structure);
-//
+
 //    function delete($structure);
 
 }

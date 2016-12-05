@@ -12,50 +12,75 @@ use Akimah\Database\DatabaseFactory;
 abstract class Model
 {
 
-    protected $table;
+    private $tableName;
+    private $structure;
+
+    function __construct()
+    {
+        $this->setTableName($this->tableName);
+        $this->setupStructure($this->structure);
+    }
 
     static function find($id)
     {
         $object = new static();
         $database = DatabaseFactory::getDatabase();
-        echo $query = "SELECT * FROM " . $object->table . " WHERE id = '$id'";
+        echo $query = "SELECT * FROM " . $object->structure->getTableName() . " WHERE id = '$id'";
         return $database->execute($query);
     }
 
-    abstract protected function table(Table &$fields);
-
-    static function createTable()
+    public static function createTable()
     {
         $object = new static();
-        $tableStructure = new Table();
-        $object->table($tableStructure);
-        $tableStructure = new TableAccess($tableStructure);
-        return DatabaseFactory::getDatabase()->createTable($object->table, $tableStructure);
+        $db = DatabaseFactory::getDatabase();
+        return $db->createTable($object->structure);
     }
 
-    static function dropTable()
+    public static function dropTable()
     {
         $object = new static();
-        return DatabaseFactory::getDatabase()->dropTable($object->table);
+        $db = DatabaseFactory::getDatabase();
+        return $db->dropTable($object->structure);
     }
 
-    function insert()
+    public function insert()
     {
         $db = DatabaseFactory::getDatabase();
-        return $db->insert($this->table, $this->getStructureWithValues());
+        return $db->insert($this->structure);
     }
 
-    function getStructureWithValues()
+    private function setupStructure(&$structure)
     {
         $table = new Table();
         $this->table($table);
         $tableAccess = new TableAccess($table);
-        foreach($tableAccess->getTableFields() as $field) {
-            if (isset($this->{$field->getName()})) {
-                $field->setValue($this->{$field->getName()});
+        $tableAccess->setTableName($this->getTableName());
+        $structure = $tableAccess;
+    }
+
+    public function setProperty($name, $value)
+    {
+        foreach ($this->structure->getTableFields() as $tableField) {
+            if ($tableField->getName() === $name) {
+                $tableField->setValue($value);
             }
         }
-        return $tableAccess;
+    }
+
+    public function setProperties($assocArray)
+    {
+        foreach ($assocArray as $key => $value) {
+            $this->setProperty($key, $value);
+        }
+    }
+
+    protected abstract function table(Table &$fields);
+
+    protected abstract function setTableName(&$tableName);
+
+    private function getTableName()
+    {
+        return $this->tableName;
     }
 
 }

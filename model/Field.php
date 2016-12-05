@@ -8,12 +8,15 @@
 namespace Akimah\Model;
 
 
-class TableField
+class Field
 {
 
     const FIELD_INT = "INT";
     const FIELD_STRING = "CHAR";
     const FIELD_DECIMAL = "DECIMAL";
+    const FIELD_DATE = "DATE";
+    const FIELD_TIME = "TIME";
+    const FIELD_DATETIME = "DATETIME";
 
     protected $name;
     protected $size;
@@ -21,9 +24,10 @@ class TableField
     protected $autoIncrement;
     protected $primaryKey;
     protected $nullable;
+    protected $defaultValue;
     protected $value;
 
-    function __construct($name, $type, $size)
+    public function __construct($name, $type, $size = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -31,23 +35,30 @@ class TableField
         $this->nullable = false;
         $this->autoIncrement = false;
         $this->primaryKey = false;
+        $this->defaultValue = "";
     }
 
-    function autoIncrement()
+    public function autoIncrement()
     {
         $this->autoIncrement = true;
         return $this;
     }
 
-    function primaryKey()
+    public function primaryKey()
     {
         $this->primaryKey = true;
         return $this;
     }
 
-    function nullable()
+    public function nullable()
     {
         $this->nullable = true;
+        return $this;
+    }
+
+    public function defaultValue($value)
+    {
+        $this->defaultValue = $value;
         return $this;
     }
 
