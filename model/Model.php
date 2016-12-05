@@ -21,42 +21,13 @@ abstract class Model
         $this->setupStructure($this->structure);
     }
 
-    static function find($id)
-    {
-        $object = new static();
-        $database = DatabaseFactory::getDatabase();
-        echo $query = "SELECT * FROM " . $object->structure->getTableName() . " WHERE id = '$id'";
-        return $database->execute($query);
-    }
+    // MODEL CONSTRUCTION BY OVERWRITING
 
-    public static function createTable()
-    {
-        $object = new static();
-        $db = DatabaseFactory::getDatabase();
-        return $db->createTable($object->structure);
-    }
+    protected abstract function table(Table &$fields);
 
-    public static function dropTable()
-    {
-        $object = new static();
-        $db = DatabaseFactory::getDatabase();
-        return $db->dropTable($object->structure);
-    }
+    protected abstract function setTableName(&$tableName);
 
-    public function insert()
-    {
-        $db = DatabaseFactory::getDatabase();
-        return $db->insert($this->structure);
-    }
-
-    private function setupStructure(&$structure)
-    {
-        $table = new Table();
-        $this->table($table);
-        $tableAccess = new TableAccess($table);
-        $tableAccess->setTableName($this->getTableName());
-        $structure = $tableAccess;
-    }
+    // ALLOW SET PROPERTIES
 
     public function setProperty($name, $value)
     {
@@ -74,9 +45,67 @@ abstract class Model
         }
     }
 
-    protected abstract function table(Table &$fields);
+    // CREATE AND DROP TABLE
 
-    protected abstract function setTableName(&$tableName);
+    public static function createTable()
+    {
+        $object = new static();
+        $db = DatabaseFactory::getDatabase();
+        return $db->createTable($object->structure);
+    }
+
+    public static function dropTable()
+    {
+        $object = new static();
+        $db = DatabaseFactory::getDatabase();
+        return $db->dropTable($object->structure);
+    }
+
+    // INSERT UPDATE AND DELETE RECORDS
+
+    public function insert()
+    {
+        $db = DatabaseFactory::getDatabase();
+        return $db->insert($this->structure);
+    }
+
+    public function update()
+    {
+
+    }
+
+    public function delete()
+    {
+
+    }
+
+    // QUERIES
+
+    public static function all()
+    {
+        $object = new static();
+        $db = DatabaseFactory::getDatabase();
+        return $db->all($object->structure);
+    }
+
+    static function find($id)
+    {
+        $object = new static();
+        $database = DatabaseFactory::getDatabase();
+        echo $query = "SELECT * FROM " . $object->structure->getTableName() . " WHERE id = '$id'";
+        return $database->execute($query);
+    }
+
+    // PRIVATE USAGE
+
+    private function setupStructure(&$structure)
+    {
+        $table = new Table();
+        $this->table($table);
+        $tableAccess = new TableAccess($table);
+        $tableAccess->setTableName($this->getTableName());
+        $structure = $tableAccess;
+    }
 
     private function getTableName()
     {

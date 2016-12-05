@@ -31,4 +31,6 @@ interface Database
 
 //    function delete($structure);
 
+    function all(TableAccess $structure);
+
 }

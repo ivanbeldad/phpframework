@@ -71,6 +71,8 @@ class MysqlDatabase implements Database
         return $result;
     }
 
+    // CREATE AND DROP TABLE
+
     public function createTable(TableAccess $structure)
     {
         $tableName = $structure->getTableName();
@@ -93,6 +95,8 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
+    // INSERT UPDATE AND DELETE RECORDS
+
     public function insert(TableAccess $structure) {
         $tableName = $structure->getTableName();
         if ($structure->invalidInsertRequirements()) return false;
@@ -101,7 +105,36 @@ class MysqlDatabase implements Database
         $values = $structure->getAllSettedValues();
         $values = join(",", $values);
         $query = "INSERT INTO " . $tableName . " ($keys) VALUES ($values)";
-        return DatabaseFactory::getDatabase()->execute($query);
+        return $this->execute($query);
+    }
+
+    public function all(TableAccess $structure)
+    {
+        $tableName = $structure->getTableName();
+        $query = "SELECT * FROM $tableName";
+        $result = $this->execute($query);
+        $fields = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            array_push($fields, $this->rowToField($structure, $row));
+        }
+        echo "<pre>" .print_r($fields, true). "</pre>";
+        return $fields;
+    }
+
+    // PRIVATE USAGE
+
+    private function rowToField(TableAccess $structure, $row)
+    {
+        $current = [];
+        foreach ($row as $key => $value) {
+            foreach ($structure->getTableFields() as $tableField) {
+                if ($key === $tableField->getName()) {
+                    $tableField->setValue($value);
+                    array_push($current, $tableField);
+                }
+            }
+        }
+        return $current;
     }
 
     private function createTableField(FieldAccess $field)
