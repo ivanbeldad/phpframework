@@ -21,9 +21,9 @@ interface Database
 
     function execute($query);
 
-    function createTable($name, TableAccess $structure);
+    function createTable($tableName, TableAccess $structure);
 
-    function dropTable($name);
+    function dropTable($tableName);
 
 //    function insert($structure);
 //

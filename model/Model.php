@@ -22,7 +22,7 @@ abstract class Model
         return $database->execute($query);
     }
 
-    abstract function table(Table &$fields);
+    abstract protected function table(Table &$fields);
 
     static function createTable()
     {
@@ -39,14 +39,23 @@ abstract class Model
         return DatabaseFactory::getDatabase()->dropTable($object->table);
     }
 
-    static function createMigrations()
+    function insert()
     {
-
+        $db = DatabaseFactory::getDatabase();
+        return $db->insert($this->table, $this->getStructureWithValues());
     }
 
-    static function dropMigrations()
+    function getStructureWithValues()
     {
-
+        $table = new Table();
+        $this->table($table);
+        $tableAccess = new TableAccess($table);
+        foreach($tableAccess->getTableFields() as $field) {
+            if (isset($this->{$field->getName()})) {
+                $field->setValue($this->{$field->getName()});
+            }
+        }
+        return $tableAccess;
     }
 
 }

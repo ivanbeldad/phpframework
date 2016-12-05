@@ -71,10 +71,10 @@ class MysqlDatabase implements Database
         return $result;
     }
 
-    function createTable($name, TableAccess $structure)
+    function createTable($tableName, TableAccess $structure)
     {
         $fields = $structure->getTableFields();
-        $query = "CREATE TABLE $name (";
+        $query = "CREATE TABLE $tableName (";
         $stringFields = [];
         foreach ($fields as $field) {
             array_push($stringFields, $this->createTableField($field));
@@ -82,8 +82,26 @@ class MysqlDatabase implements Database
         $stringFields = join(" , ", $stringFields);
         $query .= $stringFields;
         $query .= ");";
-        echo $query;
+//        echo $query;
         return $this->execute($query);
+    }
+
+    function dropTable($tableName)
+    {
+        $query = "DROP TABLE $tableName";
+        return $this->execute($query);
+    }
+
+    function insert($tableName, TableAccess $structure) {
+        if ($structure->invalidInsertRequirements()) return false;
+
+        $keys = $structure->getAllSettedNames();
+        $keys = join(",", $keys);
+        $values = $structure->getAllSettedValues();
+        $values = join(",", $values);
+
+        $query = "INSERT INTO " . $tableName . " ($keys) VALUES ($values)";
+        return DatabaseFactory::getDatabase()->execute($query);
     }
 
     private function createTableField(TableFieldAccess $field)
@@ -91,16 +109,10 @@ class MysqlDatabase implements Database
         $string = "";
         $string .= $field->getName() . " ";
         $string .= $field->getType() . "(" . $field->getSize() . ") ";
-        $string .= $field->isAutoIncrement() . " ";
-        $string .= $field->isPrimaryKey() . " ";
-        $string .= $field->isNullable() . " ";
+        $string .= $field->isAutoIncrementString() . " ";
+        $string .= $field->isPrimaryKeyString() . " ";
+        $string .= $field->isNullableString() . " ";
         return $string;
-    }
-
-    function dropTable($name)
-    {
-        $query = "DROP TABLE $name";
-        return $this->execute($query);
     }
 
     private function configurate()

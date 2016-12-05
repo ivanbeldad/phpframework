@@ -11,6 +11,7 @@ namespace Akimah\Model;
 class TableFieldAccess extends TableField
 {
 
+    public $name;
     private $tableField;
 
     public function __construct(TableField $tableField)
@@ -43,12 +44,35 @@ class TableFieldAccess extends TableField
     }
 
     /**
+     * @return string
+     */
+    public function isAutoIncrementString()
+    {
+        return $this->tableField->autoIncrement ? "AUTO_INCREMENT" : "";
+    }
+
+    /**
+     * @return string
+     */
+    public function isPrimaryKeyString()
+    {
+        return $this->tableField->primaryKey ? "PRIMARY KEY" : "";
+    }
+
+    /**
+     * @return string
+     */
+    public function isNullableString()
+    {
+        return $this->tableField->nullable ? "" : "NOT NULL";
+    }
+
+    /**
      * @return boolean
      */
     public function isAutoIncrement()
     {
-        return $this->tableField->autoIncrement ? "AUTO_INCREMENT" : "";
-//        return $this->tableField->autoIncrement;
+        return $this->tableField->autoIncrement;
     }
 
     /**
@@ -56,8 +80,7 @@ class TableFieldAccess extends TableField
      */
     public function isPrimaryKey()
     {
-        return $this->tableField->primaryKey ? "PRIMARY KEY" : "";
-//        return $this->tableField->primaryKey;
+        return $this->tableField->primaryKey;
     }
 
     /**
@@ -65,9 +88,25 @@ class TableFieldAccess extends TableField
      */
     public function isNullable()
     {
-        return $this->tableField->nullable ? "" : "NOT NULL";
-//        return $this->tableField->nullable;
+        return $this->tableField->nullable;
     }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->tableField->value;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setValue($value)
+    {
+        $this->tableField->value = $value;
+    }
+
 
     /**
      * @return string

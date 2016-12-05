@@ -18,15 +18,19 @@ class TableField
     protected $name;
     protected $size;
     protected $type;
-    protected $autoIncrement = false;
-    protected $primaryKey = false;
-    protected $nullable = false;
+    protected $autoIncrement;
+    protected $primaryKey;
+    protected $nullable;
+    protected $value;
 
     function __construct($name, $type, $size)
     {
         $this->name = $name;
         $this->type = $type;
         $this->size = $size;
+        $this->nullable = false;
+        $this->autoIncrement = false;
+        $this->primaryKey = false;
     }
 
     function autoIncrement()

@@ -20,7 +20,7 @@ class TableAccess extends Table
     }
 
     /**
-     * @return array
+     * @return TableFieldAccess[]
      */
     public function getTableFields()
     {
@@ -37,6 +37,43 @@ class TableAccess extends Table
             if (!$field instanceof TableFieldAccess) return;
             echo $field->toString() . "<br>";
         }
+    }
+
+    function invalidInsertRequirements()
+    {
+        foreach($this->getTableFields() as $field) {
+            $value = $field->getValue();
+            if(!isset($value) || $value === "") {
+                if (!$field->isNullable() && !$field->isAutoIncrement()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function getAllSettedNames()
+    {
+        $names = [];
+        foreach ($this->getTableFields() as $tableField) {
+            $value = $tableField->getName();
+            if(isset($value) && $value !== "") {
+                array_push($names, $tableField->getName());
+            }
+        }
+        return $names;
+    }
+
+    function getAllSettedValues()
+    {
+        $values = [];
+        foreach ($this->getTableFields() as $tableField) {
+            $value = $tableField->getName();
+            if(isset($value) && $value !== "") {
+                array_push($values, "'" . $tableField->getValue() . "'");
+            }
+        }
+        return $values;
     }
 
 }
