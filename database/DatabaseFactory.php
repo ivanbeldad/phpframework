@@ -20,10 +20,16 @@ class DatabaseFactory
         while (!feof($file)) {
             $string .= fgets($file);
         }
-        $databaseType = json_decode($string, true)["database_configuration"]["type"];
-        switch ($databaseType) {
+        $configuration = self::getConfiguration();
+        switch ($configuration["type"]) {
             case DatabaseFactory::MYSQL:
-                return new MysqlDatabase();
+                return new MysqlDatabase(
+                    $configuration["host"],
+                    $configuration["user"],
+                    $configuration["password"],
+                    $configuration["database"],
+                    $configuration["port"]
+                );
             default:
                 return new MysqlDatabase();
         }
@@ -35,6 +41,25 @@ class DatabaseFactory
         $path = str_replace("\\". $var->getShortName() .".php", "", $var->getFileName());
         $path .= "\\db_conf.json";
         return $path;
+    }
+
+    private static function getConfiguration()
+    {
+        $string = "";
+        $file = fopen(DatabaseFactory::getConfigPath(), "r") or die("MUEREEE!");
+        while (!feof($file)) {
+            $string .= fgets($file);
+        }
+        $config = json_decode($string, true);
+        $configuration = [
+            "host" => $config["host"],
+            "user" => $config["user"],
+            "password" => $config["password"],
+            "database" => $config["database"],
+            "port" => $config["port"],
+            "type" => $config["type"]
+        ];
+        return $configuration;
     }
 
 }

@@ -22,9 +22,13 @@ class MysqlDatabase implements Database
     private $database;
     private $port;
 
-    public function __construct()
+    public function __construct($host, $user, $password, $database, $port = 3306)
     {
-        $this->configurate();
+        $this->host = $host;
+        $this->user = $user;
+        $this->password = $password;
+        $this->database = $database;
+        $this->port = $port;
         mysqli_report(MYSQLI_REPORT_STRICT);
     }
 
@@ -184,21 +188,6 @@ class MysqlDatabase implements Database
         $string .= $field->isNullableString() . " ";
         $string .= $field->getDefaultValueString() . " ";
         return $string;
-    }
-
-    private function configurate()
-    {
-        $string = "";
-        $file = fopen(DatabaseFactory::getConfigPath(), "r") or die("MUEREEE!");
-        while (!feof($file)) {
-            $string .= fgets($file);
-        }
-        $config = json_decode($string, true)["database_configuration"];
-        $this->host = $config["host"];
-        $this->user = $config["user"];
-        $this->password = $config["password"];
-        $this->database = $config["database"];
-        $this->port = $config["port"];
     }
 
 }
