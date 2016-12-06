@@ -3,7 +3,7 @@
     "host": "localhost",
     "user": "root",
     "password": "",
-    "database": "aroa",
+    "database": "tienda",
     "type": "mysql",
     "port": 3306
   }
