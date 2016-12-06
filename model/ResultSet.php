@@ -6,7 +6,7 @@
  */
 
 namespace Akimah\Model;
-
+use Exception;
 
 class ResultSet
 {
@@ -31,26 +31,33 @@ class ResultSet
 
     /**
      * @return Result
+     * @throws Exception "There are any results."
      */
     public function first()
     {
-        if ($this->isEmpty()) return null;
+        if ($this->isEmpty()) throw new EmptyResultsException();
         return $this->results[0];
     }
 
     /**
      * @return Result
+     * @throws Exception
      */
     public function last()
     {
-        if ($this->isEmpty()) return null;
+        if ($this->isEmpty()) throw new EmptyResultsException();
         return $this->results[$this->length - 1];
     }
 
+    /**
+     * @param $key
+     * @return $this
+     * @throws InvalidKeyException
+     */
     public function sortBy($key)
     {
         if ($this->length <= 1) return $this;
-        if ($this->first()->getPropertyValue($key) === null) return $this;
+        if ($this->first()->getPropertyValue($key) === null) throw new InvalidKeyException();
         usort($this->results, function ($a, $b) use ($key) {
             if (!$a instanceof Result || !$b instanceof Result) return;
             $aValue = null;
@@ -167,8 +174,6 @@ class ResultSet
             $result->delete();
         }
     }
-
-    // ERROR CONTROL
 
     private function isEmpty()
     {
