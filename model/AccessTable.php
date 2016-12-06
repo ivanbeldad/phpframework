@@ -11,16 +11,21 @@ namespace Akimah\Model;
 class AccessTable extends Table
 {
 
+    /**
+     * @var AccessProperty[]
+     */
+    protected $accessProperties;
+
     function __construct(Table $table)
     {
         $this->tableName = $table->tableName;
-        $this->fieldsAccess = $this->convertFields($table);
+        $this->accessProperties = $this->convertFields($table);
     }
 
     private function convertFields(Table $table)
     {
         $accessFields = [];
-        foreach($table->fieldsAccess as $tableField) {
+        foreach($table->accessProperties as $tableField) {
             array_push($accessFields, new AccessProperty($tableField));
         }
         return $accessFields;
@@ -39,14 +44,14 @@ class AccessTable extends Table
     /**
      * @return AccessProperty[]
      */
-    public function getFieldsAccess()
+    public function getAccessProperties()
     {
-        return $this->fieldsAccess;
+        return $this->accessProperties;
     }
 
     public function showAll()
     {
-        foreach ($this->getFieldsAccess() as $field) {
+        foreach ($this->getAccessProperties() as $field) {
             if (!$field instanceof AccessProperty) return;
             echo $field->toString() . "<br>";
         }
@@ -54,7 +59,7 @@ class AccessTable extends Table
 
     public function invalidInsertRequirements()
     {
-        foreach($this->getFieldsAccess() as $field) {
+        foreach($this->getAccessProperties() as $field) {
             $value = $field->getValue();
             if(!isset($value) || $value === "") {
                 if (!$field->isNullable() && !$field->isAutoIncrement() && !$field->isDefaultValue()) {
@@ -65,10 +70,10 @@ class AccessTable extends Table
         return false;
     }
 
-    public function getAllSettedNames()
+    public function getSettedKeys()
     {
         $names = [];
-        foreach ($this->getFieldsAccess() as $tableField) {
+        foreach ($this->getAccessProperties() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
                 array_push($names, $tableField->getKey());
@@ -77,16 +82,30 @@ class AccessTable extends Table
         return $names;
     }
 
-    public function getAllSettedValues()
+    public function getSettedValues()
     {
         $values = [];
-        foreach ($this->getFieldsAccess() as $tableField) {
+        foreach ($this->getAccessProperties() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
                 array_push($values, "'" . $tableField->getValue() . "'");
             }
         }
         return $values;
+    }
+
+    public function getProperty($key)
+    {
+        foreach ($this->accessProperties as $accessProperty) {
+            if ($accessProperty->getKey() === $key) return $accessProperty;
+        }
+        return null;
+    }
+
+    public function getValue($key)
+    {
+        if ($this->getProperty($key) === null) return null;
+        return $this->getProperty($key)->getValue();
     }
 
 }

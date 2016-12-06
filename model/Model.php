@@ -39,7 +39,7 @@ abstract class Model
 
     public function setProperty($key, $value)
     {
-        foreach ($this->structure->getFieldsAccess() as $tableField) {
+        foreach ($this->structure->getAccessProperties() as $tableField) {
             if ($tableField->getKey() === $key) {
                 $tableField->setValue($value);
             }
@@ -77,16 +77,6 @@ abstract class Model
     {
         $db = DatabaseFactory::getDatabase();
         return $db->insert($this->structure);
-    }
-
-    public function update()
-    {
-
-    }
-
-    public function delete()
-    {
-
     }
 
     // QUERIES

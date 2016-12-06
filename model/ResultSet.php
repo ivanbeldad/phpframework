@@ -34,6 +34,7 @@ class ResultSet
      */
     public function first()
     {
+        if ($this->isEmpty()) return null;
         return $this->results[0];
     }
 
@@ -42,11 +43,14 @@ class ResultSet
      */
     public function last()
     {
+        if ($this->isEmpty()) return null;
         return $this->results[$this->length - 1];
     }
 
     public function sortBy($key)
     {
+        if ($this->length <= 1) return $this;
+        if ($this->first()->getPropertyValue($key) === null) return $this;
         usort($this->results, function ($a, $b) use ($key) {
             if (!$a instanceof Result || !$b instanceof Result) return;
             $aValue = null;
@@ -155,6 +159,20 @@ class ResultSet
         }
         $table .= "</table>";
         echo $table;
+    }
+
+    public function deleteMultiple()
+    {
+        foreach ($this->results as $result) {
+            $result->delete();
+        }
+    }
+
+    // ERROR CONTROL
+
+    private function isEmpty()
+    {
+        return $this->length === 0;
     }
 
 }

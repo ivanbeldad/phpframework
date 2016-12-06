@@ -8,7 +8,6 @@
 namespace Akimah\Database;
 use Akimah\Model\Result;
 use Akimah\Model\ResultSet;
-use Akimah\Model\Table;
 use Akimah\Model\AccessTable;
 use Akimah\Model\AccessProperty;
 
@@ -78,7 +77,7 @@ class MysqlDatabase implements Database
     public function createTable(AccessTable $structure)
     {
         $tableName = $structure->getTableName();
-        $fields = $structure->getFieldsAccess();
+        $fields = $structure->getAccessProperties();
         $query = "CREATE TABLE $tableName (";
         $stringFields = [];
         foreach ($fields as $field) {
@@ -102,11 +101,35 @@ class MysqlDatabase implements Database
     public function insert(AccessTable $structure) {
         $tableName = $structure->getTableName();
         if ($structure->invalidInsertRequirements()) return false;
-        $keys = $structure->getAllSettedNames();
+        $keys = $structure->getSettedKeys();
         $keys = join(",", $keys);
-        $values = $structure->getAllSettedValues();
+        $values = $structure->getSettedValues();
         $values = join(",", $values);
         $query = "INSERT INTO " . $tableName . " ($keys) VALUES ($values)";
+        return $this->execute($query);
+    }
+
+    public function update(AccessTable $origin, AccessTable $destiny)
+    {
+        $tableName = $origin->getTableName();
+        if ($destiny->invalidInsertRequirements()) return false;
+
+        $destinyString = $this->setValuesString($destiny);
+        $originString = $this->conditions($origin);
+
+        $query = "UPDATE $tableName SET ";
+        $query .= $destinyString;
+        $query .= " WHERE ";
+        $query .= $originString;
+
+        return $this->execute($query);
+    }
+
+    public function delete(AccessTable $structure)
+    {
+        $tableName = $structure->getTableName();
+        $conditions = $this->conditions($structure);
+        $query = "DELETE FROM $tableName WHERE $conditions";
         return $this->execute($query);
     }
 
@@ -117,12 +140,39 @@ class MysqlDatabase implements Database
         $result = $this->execute($query);
         $resultSet = new ResultSet();
         while ($row = mysqli_fetch_assoc($result)) {
-            $resultSet->addResult(Result::rowToResult($structure, $row));
+            $resultSet->addResult(Result::assocArrayToResult($structure, $row));
         }
         return $resultSet;
     }
 
     // PRIVATE USAGE
+
+    private function setValuesString(AccessTable $structure)
+    {
+        $structureString = [];
+        $structureKeys = $structure->getSettedKeys();
+        $structureValues = $structure->getSettedValues();
+        $structureNum = count($structureKeys);
+        for ($i = 0; $i < $structureNum; $i++) {
+            array_push($structureString, $structureKeys[$i] . "=" . $structureValues[$i]);
+        }
+        $structureString = join(" , ", $structureString);
+        return $structureString;
+    }
+
+    private function conditions(AccessTable $structure)
+    {
+        // WHERE
+        $structureString = [];
+        $structureKeys = $structure->getSettedKeys();
+        $structureValues = $structure->getSettedValues();
+        $structureNum = count($structureKeys);
+        for ($i = 0; $i < $structureNum; $i++) {
+            array_push($structureString, $structureKeys[$i] . "=" . $structureValues[$i]);
+        }
+        $structureString = join(" AND ", $structureString);
+        return $structureString;
+    }
 
     private function createTableField(AccessProperty $field)
     {

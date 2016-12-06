@@ -8,6 +8,8 @@
 namespace Akimah\Model;
 
 
+use Akimah\Database\DatabaseFactory;
+
 class Result
 {
 
@@ -15,9 +17,14 @@ class Result
      * @var AccessTable
      */
     private $structure;
+    /**
+     * @var AccessTable
+     */
+    private $origin;
 
     public function __construct(AccessTable $structure)
     {
+        $this->origin = new AccessTable($structure);
         $this->structure = new AccessTable($structure);
     }
 
@@ -26,38 +33,59 @@ class Result
      */
     public function getFieldsAccess()
     {
-        return $this->structure->getFieldsAccess();
+        return $this->structure->getAccessProperties();
     }
 
     public function getFieldByKey($key)
     {
         foreach ($this->getFieldsAccess() as $fieldsAccess) {
-            if ($fieldsAccess->getKey() === $key) return $fieldsAccess;
+            if (strtolower($fieldsAccess->getKey()) === strtolower($key)) {
+                return $fieldsAccess;
+            }
         }
         return null;
     }
 
-    public function setValue($key, $value)
+    public function setProperty($key, $value)
     {
-        foreach ($this->structure->getFieldsAccess() as $fieldAccess) {
+        $this->structure->getProperty($key)->setValue($value);
+        return $this;
+    }
+
+    private function setupValues($key, $value)
+    {
+        foreach ($this->origin->getAccessProperties() as $fieldAccess) {
+            if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
+        }
+        foreach ($this->structure->getAccessProperties() as $fieldAccess) {
             if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
         }
     }
 
     public function getPropertyValue($key)
     {
-        foreach ($this->structure->getFieldsAccess() as $fieldAccess) {
-            if ($fieldAccess->getKey() === $key) return $fieldAccess->getValue();
-        }
+        return $this->structure->getValue($key);
     }
 
-    public static function rowToResult(AccessTable $structure, $row)
+    public static function assocArrayToResult(AccessTable $structure, $assocArray)
     {
         $newResult = new Result($structure);
-        foreach ($row as $key => $value) {
-            $newResult->setValue($key, $value);
+        foreach ($assocArray as $key => $value) {
+            $newResult->setupValues($key, $value);
         }
         return $newResult;
+    }
+
+    public function update()
+    {
+        $db = DatabaseFactory::getDatabase();
+        return $db->update($this->origin, $this->structure);
+    }
+
+    public function delete()
+    {
+        $db = DatabaseFactory::getDatabase();
+        return $db->delete($this->origin);
     }
 
 }

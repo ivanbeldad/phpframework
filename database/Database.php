@@ -27,9 +27,9 @@ interface Database
 
     function insert(AccessTable $structure);
 
-//    function update($structure);
+    function update(AccessTable $origin, AccessTable $destiny);
 
-//    function delete($structure);
+    function delete(AccessTable $structure);
 
     function all(AccessTable $structure);
 
