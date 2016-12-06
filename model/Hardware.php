@@ -19,6 +19,7 @@ class Hardware extends Model
         $fields->string("category")->nullable();
         $fields->date("date_up");
         $fields->int("warranty")->nullable();
+        $fields->email("seller_email")->nullable();
     }
 
     protected function setTableName(&$tableName)

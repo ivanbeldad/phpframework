@@ -12,7 +12,8 @@
   "autoload": {
     "psr-4": {
       "Akimah\\Model\\": "model/",
-      "Akimah\\Database\\": "database/"
+      "Akimah\\Database\\": "database/",
+      "Akimah\\Form\\": "form/"
     }
   }
 }
