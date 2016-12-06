@@ -42,6 +42,27 @@ class AccessProperty extends Property
         return $this->type;
     }
 
+    public function getTypeString()
+    {
+        switch ($this->type) {
+            case Property::FIELD_STRING:
+                return "VARCHAR";
+            case Property::FIELD_EMAIL:
+                return "VARCHAR";
+            case Property::FIELD_DATE:
+                return "DATE";
+            case Property::FIELD_TIME:
+                return "TIME";
+            case Property::FIELD_DATETIME:
+                return "DATETIME";
+            case Property::FIELD_DECIMAL:
+                return "DECIMAL";
+            case Property::FIELD_INT:
+                return "INT";
+        }
+        return $this->type;
+    }
+
     public function isAutoIncrementString()
     {
         return $this->autoIncrement ? "AUTO_INCREMENT" : "";

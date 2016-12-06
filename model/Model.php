@@ -96,6 +96,13 @@ abstract class Model
         return $database->execute($query);
     }
 
+    // FORMS
+
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
     // PRIVATE USAGE
 
     private function setupStructure(&$structure)

@@ -36,6 +36,13 @@ class Table
         return $newField;
     }
 
+    public function email($name, $max_length = 255)
+    {
+        $newField = new Property($name, Property::FIELD_EMAIL, $max_length);
+        array_push($this->accessProperties, $newField);
+        return $newField;
+    }
+
     public function decimal($name, $digits = 8, $decimals = 2)
     {
         $newField = new Property($name, Property::FIELD_DECIMAL, $digits . "," . $decimals);

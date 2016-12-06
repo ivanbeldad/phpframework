@@ -11,12 +11,13 @@ namespace Akimah\Model;
 class Property
 {
 
-    const FIELD_INT = "INT";
-    const FIELD_STRING = "CHAR";
-    const FIELD_DECIMAL = "DECIMAL";
-    const FIELD_DATE = "DATE";
-    const FIELD_TIME = "TIME";
-    const FIELD_DATETIME = "DATETIME";
+    const FIELD_INT = 1;
+    const FIELD_STRING = 2;
+    const FIELD_DECIMAL = 3;
+    const FIELD_DATE = 4;
+    const FIELD_TIME = 5;
+    const FIELD_DATETIME = 6;
+    const FIELD_EMAIL = 7;
 
     protected $key;
     protected $size;

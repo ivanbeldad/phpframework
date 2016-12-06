@@ -182,7 +182,7 @@ class MysqlDatabase implements Database
     {
         $string = "";
         $string .= $field->getKey() . " ";
-        $string .= $field->getType() . $field->getSizeString() . " ";
+        $string .= $field->getTypeString() . $field->getSizeString() . " ";
         $string .= $field->isAutoIncrementString() . " ";
         $string .= $field->isPrimaryKeyString() . " ";
         $string .= $field->isNullableString() . " ";
