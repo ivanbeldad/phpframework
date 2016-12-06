@@ -6,9 +6,11 @@
  */
 
 namespace Akimah\Database;
+use Akimah\Model\Result;
+use Akimah\Model\ResultSet;
 use Akimah\Model\Table;
-use Akimah\Model\TableAccess;
-use Akimah\Model\FieldAccess;
+use Akimah\Model\AccessTable;
+use Akimah\Model\AccessProperty;
 
 
 class MysqlDatabase implements Database
@@ -73,10 +75,10 @@ class MysqlDatabase implements Database
 
     // CREATE AND DROP TABLE
 
-    public function createTable(TableAccess $structure)
+    public function createTable(AccessTable $structure)
     {
         $tableName = $structure->getTableName();
-        $fields = $structure->getTableFields();
+        $fields = $structure->getFieldsAccess();
         $query = "CREATE TABLE $tableName (";
         $stringFields = [];
         foreach ($fields as $field) {
@@ -88,7 +90,7 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
-    public function dropTable(TableAccess $structure)
+    public function dropTable(AccessTable $structure)
     {
         $tableName = $structure->getTableName();
         $query = "DROP TABLE $tableName";
@@ -97,7 +99,7 @@ class MysqlDatabase implements Database
 
     // INSERT UPDATE AND DELETE RECORDS
 
-    public function insert(TableAccess $structure) {
+    public function insert(AccessTable $structure) {
         $tableName = $structure->getTableName();
         if ($structure->invalidInsertRequirements()) return false;
         $keys = $structure->getAllSettedNames();
@@ -108,39 +110,24 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
-    public function all(TableAccess $structure)
+    public function all(AccessTable $structure)
     {
         $tableName = $structure->getTableName();
         $query = "SELECT * FROM $tableName";
         $result = $this->execute($query);
-        $fields = [];
+        $resultSet = new ResultSet();
         while ($row = mysqli_fetch_assoc($result)) {
-            array_push($fields, $this->rowToField($structure, $row));
+            $resultSet->addResult(Result::rowToResult($structure, $row));
         }
-        echo "<pre>" .print_r($fields, true). "</pre>";
-        return $fields;
+        return $resultSet;
     }
 
     // PRIVATE USAGE
 
-    private function rowToField(TableAccess $structure, $row)
-    {
-        $current = [];
-        foreach ($row as $key => $value) {
-            foreach ($structure->getTableFields() as $tableField) {
-                if ($key === $tableField->getName()) {
-                    $tableField->setValue($value);
-                    array_push($current, $tableField);
-                }
-            }
-        }
-        return $current;
-    }
-
-    private function createTableField(FieldAccess $field)
+    private function createTableField(AccessProperty $field)
     {
         $string = "";
-        $string .= $field->getName() . " ";
+        $string .= $field->getKey() . " ";
         $string .= $field->getType() . $field->getSizeString() . " ";
         $string .= $field->isAutoIncrementString() . " ";
         $string .= $field->isPrimaryKeyString() . " ";

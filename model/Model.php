@@ -13,12 +13,20 @@ abstract class Model
 {
 
     private $tableName;
+    /**
+     * @var AccessTable
+     */
     private $structure;
 
     function __construct()
     {
         $this->setTableName($this->tableName);
         $this->setupStructure($this->structure);
+    }
+
+    static function create()
+    {
+        return new static();
     }
 
     // MODEL CONSTRUCTION BY OVERWRITING
@@ -29,13 +37,14 @@ abstract class Model
 
     // ALLOW SET PROPERTIES
 
-    public function setProperty($name, $value)
+    public function setProperty($key, $value)
     {
-        foreach ($this->structure->getTableFields() as $tableField) {
-            if ($tableField->getName() === $name) {
+        foreach ($this->structure->getFieldsAccess() as $tableField) {
+            if ($tableField->getKey() === $key) {
                 $tableField->setValue($value);
             }
         }
+        return $this;
     }
 
     public function setProperties($assocArray)
@@ -43,6 +52,7 @@ abstract class Model
         foreach ($assocArray as $key => $value) {
             $this->setProperty($key, $value);
         }
+        return $this;
     }
 
     // CREATE AND DROP TABLE
@@ -102,7 +112,7 @@ abstract class Model
     {
         $table = new Table();
         $this->table($table);
-        $tableAccess = new TableAccess($table);
+        $tableAccess = new AccessTable($table);
         $tableAccess->setTableName($this->getTableName());
         $structure = $tableAccess;
     }

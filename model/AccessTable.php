@@ -8,20 +8,20 @@
 namespace Akimah\Model;
 
 
-class TableAccess extends Table
+class AccessTable extends Table
 {
 
     function __construct(Table $table)
     {
         $this->tableName = $table->tableName;
-        $this->tableFields = $this->convertFields($table);
+        $this->fieldsAccess = $this->convertFields($table);
     }
 
     private function convertFields(Table $table)
     {
         $accessFields = [];
-        foreach($table->tableFields as $tableField) {
-            array_push($accessFields, new FieldAccess($tableField));
+        foreach($table->fieldsAccess as $tableField) {
+            array_push($accessFields, new AccessProperty($tableField));
         }
         return $accessFields;
     }
@@ -36,22 +36,25 @@ class TableAccess extends Table
         $this->tableName = $tableName;
     }
 
-    public function getTableFields()
+    /**
+     * @return AccessProperty[]
+     */
+    public function getFieldsAccess()
     {
-        return $this->tableFields;
+        return $this->fieldsAccess;
     }
 
     public function showAll()
     {
-        foreach ($this->getTableFields() as $field) {
-            if (!$field instanceof FieldAccess) return;
+        foreach ($this->getFieldsAccess() as $field) {
+            if (!$field instanceof AccessProperty) return;
             echo $field->toString() . "<br>";
         }
     }
 
     public function invalidInsertRequirements()
     {
-        foreach($this->getTableFields() as $field) {
+        foreach($this->getFieldsAccess() as $field) {
             $value = $field->getValue();
             if(!isset($value) || $value === "") {
                 if (!$field->isNullable() && !$field->isAutoIncrement() && !$field->isDefaultValue()) {
@@ -65,10 +68,10 @@ class TableAccess extends Table
     public function getAllSettedNames()
     {
         $names = [];
-        foreach ($this->getTableFields() as $tableField) {
+        foreach ($this->getFieldsAccess() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
-                array_push($names, $tableField->getName());
+                array_push($names, $tableField->getKey());
             }
         }
         return $names;
@@ -77,7 +80,7 @@ class TableAccess extends Table
     public function getAllSettedValues()
     {
         $values = [];
-        foreach ($this->getTableFields() as $tableField) {
+        foreach ($this->getFieldsAccess() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
                 array_push($values, "'" . $tableField->getValue() . "'");

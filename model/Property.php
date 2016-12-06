@@ -8,7 +8,7 @@
 namespace Akimah\Model;
 
 
-class Field
+class Property
 {
 
     const FIELD_INT = "INT";
@@ -18,7 +18,7 @@ class Field
     const FIELD_TIME = "TIME";
     const FIELD_DATETIME = "DATETIME";
 
-    protected $name;
+    protected $key;
     protected $size;
     protected $type;
     protected $autoIncrement;
@@ -29,7 +29,7 @@ class Field
 
     public function __construct($name, $type, $size = null)
     {
-        $this->name = $name;
+        $this->key = $name;
         $this->type = $type;
         $this->size = $size;
         $this->nullable = false;

@@ -8,12 +8,12 @@
 namespace Akimah\Model;
 
 
-class FieldAccess extends Field
+class AccessProperty extends Property
 {
 
-    public function __construct(Field $tableField)
+    public function __construct(Property $tableField)
     {
-        $this->name = $tableField->name;
+        $this->key = $tableField->key;
         $this->type = $tableField->type;
         $this->size = $tableField->size;
         $this->nullable = $tableField->nullable;
@@ -22,9 +22,9 @@ class FieldAccess extends Field
         $this->defaultValue = $tableField->defaultValue;
     }
 
-    public function getName()
+    public function getKey()
     {
-        return $this->name;
+        return $this->key;
     }
 
     public function getSizeString()
@@ -100,7 +100,7 @@ class FieldAccess extends Field
     public function toString()
     {
         $string = "";
-        $string .= "Name: " . $this->name . "<br>";
+        $string .= "Name: " . $this->key . "<br>";
         $string .= "Size: " . $this->size . "<br>";
         $string .= "Type: " . $this->type . "<br>";
         $string .= "AutoIncrement: " . $this->autoIncrement . "<br>";
