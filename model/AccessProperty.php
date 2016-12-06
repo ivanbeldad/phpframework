@@ -59,6 +59,8 @@ class AccessProperty extends Property
                 return "DECIMAL";
             case Property::FIELD_INT:
                 return "INT";
+            case Property::FIELD_BOOLEAN:
+                return "BIT";
         }
         return $this->type;
     }

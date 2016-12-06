@@ -18,6 +18,7 @@ class Property
     const FIELD_TIME = 5;
     const FIELD_DATETIME = 6;
     const FIELD_EMAIL = 7;
+    const FIELD_BOOLEAN = 8;
 
     protected $key;
     protected $size;

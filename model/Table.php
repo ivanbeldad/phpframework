@@ -71,4 +71,11 @@ class Table
         return $newField;
     }
 
+    public function boolean($name)
+    {
+        $newField = new Property($name, Property::FIELD_BOOLEAN, "1");
+        array_push($this->accessProperties, $newField);
+        return $newField;
+    }
+
 }
