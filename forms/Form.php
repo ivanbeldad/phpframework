@@ -83,7 +83,7 @@ class Form
     {
         $htmlTags = [];
         array_push($htmlTags, Form::open($url, $method));
-        $structure = $object->getStructure();
+        $structure = $object->getTable();
         array_push($htmlTags, "<fieldset>");
         array_push($htmlTags, "<legend>" . ucfirst($structure->getTableName()) . "</legend>");
         foreach ($structure->getProperties() as $property) {

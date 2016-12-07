@@ -42,4 +42,10 @@ interface PropertyCreator
      */
     public function primaryKey();
 
+    /**
+     * @param string $name
+     * @return ForeignKeyCreator
+     */
+    public function foreignKey($name);
+
 }

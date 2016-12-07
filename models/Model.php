@@ -15,14 +15,14 @@ abstract class Model
 
     private $tableName;
     /**
-     * @var AccessTable
+     * @var Table
      */
-    private $structure;
+    private $table;
 
     function __construct()
     {
         $this->setTableName($this->tableName);
-        $this->setupStructure($this->structure);
+        $this->setupStructure($this->table);
     }
 
     static function create()
@@ -32,7 +32,7 @@ abstract class Model
 
     // MODEL CONSTRUCTION BY OVERWRITING
 
-    protected abstract function table(Table &$fields);
+    protected abstract function table(TableCreator &$fields);
 
     protected abstract function setTableName(&$tableName);
 
@@ -40,7 +40,7 @@ abstract class Model
 
     public function setProperty($key, $value)
     {
-        foreach ($this->structure->getProperties() as $tableField) {
+        foreach ($this->table->getProperties() as $tableField) {
             if ($tableField->getKey() === $key) {
                 $tableField->setValue($value);
             }
@@ -62,22 +62,22 @@ abstract class Model
     {
         $object = new static();
         $db = DatabaseFactory::getDatabase();
-        return $db->createTable($object->structure);
+        return $db->createTable($object->table);
     }
 
     public static function dropTable()
     {
         $object = new static();
         $db = DatabaseFactory::getDatabase();
-        return $db->dropTable($object->structure);
+        return $db->dropTable($object->table);
     }
 
-    // INSERT UPDATE AND DELETE RECORDS
+    // INSERT NEW OBJECTS IN DATABASE
 
     public function insert()
     {
         $db = DatabaseFactory::getDatabase();
-        return $db->insert($this->structure);
+        return $db->insert($this->table);
     }
 
     // QUERIES
@@ -86,22 +86,22 @@ abstract class Model
     {
         $object = new static();
         $db = DatabaseFactory::getDatabase();
-        return $db->all($object->structure);
+        return $db->all($object->table);
     }
 
     static function find($id)
     {
         $object = new static();
         $database = DatabaseFactory::getDatabase();
-        echo $query = "SELECT * FROM " . $object->structure->getTableName() . " WHERE id = '$id'";
+        echo $query = "SELECT * FROM " . $object->table->getTableName() . " WHERE id = '$id'";
         return $database->execute($query);
     }
 
     // FORMS
 
-    public function getStructure()
+    public function getTable()
     {
-        return $this->structure;
+        return $this->table;
     }
 
     // PRIVATE USAGE
@@ -110,9 +110,8 @@ abstract class Model
     {
         $table = new Table();
         $this->table($table);
-        $tableAccess = new AccessTable($table);
-        $tableAccess->setTableName($this->getTableName());
-        $structure = $tableAccess;
+        $table->setTableName($this->getTableName());
+        $structure = $table;
     }
 
     private function getTableName()

@@ -9,7 +9,7 @@ namespace FrameworkIvan\Database;
 
 use FrameworkIvan\Model\Result;
 use FrameworkIvan\Model\ResultSet;
-use FrameworkIvan\Model\AccessTable;
+use FrameworkIvan\Model\Table;
 use FrameworkIvan\Model\Property;
 use FrameworkIvan\Model\ForeignKey;
 
@@ -81,14 +81,14 @@ class MysqlDatabase implements Database
 
     // CREATE AND DROP TABLE
 
-    public function createTable(AccessTable $structure)
+    public function createTable(Table $structure)
     {
         $this->createFields($structure);
         $this->addIndexes($structure);
         $this->addForeignKeys($structure);
     }
 
-    public function dropTable(AccessTable $structure)
+    public function dropTable(Table $structure)
     {
         $tableName = $structure->getTableName();
         $query = "DROP TABLE $tableName";
@@ -97,7 +97,7 @@ class MysqlDatabase implements Database
 
     // INSERT UPDATE AND DELETE RECORDS
 
-    public function insert(AccessTable $structure)
+    public function insert(Table $structure)
     {
         $tableName = $structure->getTableName();
         if ($structure->invalidInsertRequirements()) return false;
@@ -114,7 +114,7 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
-    public function update(AccessTable $origin, AccessTable $destiny)
+    public function update(Table $origin, Table $destiny)
     {
         $tableName = $origin->getTableName();
         if ($destiny->invalidInsertRequirements()) return false;
@@ -130,7 +130,7 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
-    public function delete(AccessTable $structure)
+    public function delete(Table $structure)
     {
         $tableName = $structure->getTableName();
         $conditions = $this->conditions($structure);
@@ -138,7 +138,7 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
-    public function all(AccessTable $structure)
+    public function all(Table $structure)
     {
         $tableName = $structure->getTableName();
         $query = "SELECT * FROM $tableName";
@@ -152,7 +152,7 @@ class MysqlDatabase implements Database
 
     // PRIVATE USAGE
 
-    private function createFields(AccessTable $structure)
+    private function createFields(Table $structure)
     {
         $table = $structure->getTableName();
         $properties = $structure->getProperties();
@@ -174,7 +174,7 @@ class MysqlDatabase implements Database
         $this->execute($query);
     }
 
-    private function addForeignKeys(AccessTable $structure)
+    private function addForeignKeys(Table $structure)
     {
         $table = $structure->getTableName();
         $properties = $structure->getProperties();
@@ -193,7 +193,7 @@ class MysqlDatabase implements Database
         }
     }
 
-    private function addIndexes(AccessTable $structure)
+    private function addIndexes(Table $structure)
     {
         $table = $structure->getTableName();
         $properties = $structure->getProperties();
@@ -206,7 +206,7 @@ class MysqlDatabase implements Database
         }
     }
 
-    private function setValuesString(AccessTable $structure)
+    private function setValuesString(Table $structure)
     {
         $structureString = [];
         $structureKeys = $structure->getSettedKeys();
@@ -219,7 +219,7 @@ class MysqlDatabase implements Database
         return $structureString;
     }
 
-    private function conditions(AccessTable $structure)
+    private function conditions(Table $structure)
     {
         // WHERE
         $structureString = [];

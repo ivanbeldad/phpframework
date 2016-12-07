@@ -11,7 +11,7 @@ namespace FrameworkIvan\Model;
 class Order extends Model
 {
 
-    protected function table(Table &$fields)
+    protected function table(TableCreator &$fields)
     {
         $fields->int("id")->autoIncrement()->primaryKey();
         $fields->int("product_id")->foreignKey("product_id_fk")->references("hardware")->on("id");

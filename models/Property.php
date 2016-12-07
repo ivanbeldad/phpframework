@@ -181,10 +181,6 @@ class Property implements PropertyCreator
         return $this;
     }
 
-    /**
-     * @param $name
-     * @return ForeignKeyCreator
-     */
     public function foreignKey($name)
     {
         $this->index();

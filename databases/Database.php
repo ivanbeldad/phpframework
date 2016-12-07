@@ -7,7 +7,7 @@
 
 namespace FrameworkIvan\Database;
 
-use FrameworkIvan\Model\AccessTable;
+use FrameworkIvan\Model\Table;
 
 
 interface Database
@@ -21,16 +21,16 @@ interface Database
 
     function execute($query);
 
-    function createTable(AccessTable $structure);
+    function createTable(Table $structure);
 
-    function dropTable(AccessTable $structure);
+    function dropTable(Table $structure);
 
-    function insert(AccessTable $structure);
+    function insert(Table $structure);
 
-    function update(AccessTable $origin, AccessTable $destiny);
+    function update(Table $origin, Table $destiny);
 
-    function delete(AccessTable $structure);
+    function delete(Table $structure);
 
-    function all(AccessTable $structure);
+    function all(Table $structure);
 
 }

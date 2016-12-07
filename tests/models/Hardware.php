@@ -11,7 +11,7 @@ namespace FrameworkIvan\Model;
 class Hardware extends Model
 {
 
-    protected function table(Table &$fields)
+    protected function table(TableCreator &$fields)
     {
         $fields->int("id")->autoIncrement()->primaryKey();
         $fields->string("name", "100")->unique();

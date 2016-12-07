@@ -14,18 +14,18 @@ class Result
 {
 
     /**
-     * @var AccessTable
+     * @var Table
      */
-    private $structure;
+    private $table;
     /**
-     * @var AccessTable
+     * @var Table
      */
     private $origin;
 
-    public function __construct(AccessTable $structure)
+    public function __construct(Table $table)
     {
-        $this->origin = new AccessTable($structure);
-        $this->structure = new AccessTable($structure);
+        $this->origin = Table::getClone($table);
+        $this->table = Table::getClone($table);
     }
 
     /**
@@ -33,7 +33,7 @@ class Result
      */
     public function getFieldsAccess()
     {
-        return $this->structure->getProperties();
+        return $this->table->getProperties();
     }
 
     public function getFieldByKey($key)
@@ -48,7 +48,7 @@ class Result
 
     public function setProperty($key, $value)
     {
-        $this->structure->getProperty($key)->setValue($value);
+        $this->table->getProperty($key)->setValue($value);
         return $this;
     }
 
@@ -57,17 +57,17 @@ class Result
         foreach ($this->origin->getProperties() as $fieldAccess) {
             if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
         }
-        foreach ($this->structure->getProperties() as $fieldAccess) {
+        foreach ($this->table->getProperties() as $fieldAccess) {
             if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
         }
     }
 
     public function getPropertyValue($key)
     {
-        return $this->structure->getValue($key);
+        return $this->table->getValue($key);
     }
 
-    public static function assocArrayToResult(AccessTable $structure, $assocArray)
+    public static function assocArrayToResult(Table $structure, $assocArray)
     {
         $newResult = new Result($structure);
         foreach ($assocArray as $key => $value) {
@@ -79,7 +79,7 @@ class Result
     public function update()
     {
         $db = DatabaseFactory::getDatabase();
-        return $db->update($this->origin, $this->structure);
+        return $db->update($this->origin, $this->table);
     }
 
     public function delete()
