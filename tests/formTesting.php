@@ -1,6 +1,8 @@
 <?php
 
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
+require_once 'models/Hardware.php';
+require_once 'models/Order.php';
 
 use FrameworkIvan\Form\Form;
 use FrameworkIvan\Model\Hardware;
