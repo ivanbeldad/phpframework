@@ -5,8 +5,10 @@
  * Time: 6:54
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Exception;
+
 use Exception;
+
 
 class EmptyResultsException extends Exception
 {

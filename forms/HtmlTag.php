@@ -5,9 +5,9 @@
  * Time: 9:10
  */
 
-namespace Akimah\Form;
-use Akimah\Model\AccessProperty;
-use Akimah\Model;
+namespace FrameworkIvan\Form;
+
+use FrameworkIvan\Model\AccessProperty;
 
 
 class HtmlTag

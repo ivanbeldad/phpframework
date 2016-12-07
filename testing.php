@@ -1,9 +1,10 @@
 <?php
 
 require_once 'vendor/autoload.php';
-use \Akimah\Model\Hardware;
-use \Akimah\Model\Order;
-use \Akimah\Model\ResultSet;
+
+use FrameworkIvan\Model\Hardware;
+use FrameworkIvan\Model\Order;
+use FrameworkIvan\Model\ResultSet;
 
 function createHardware()
 {
@@ -107,14 +108,17 @@ hardwareTests();
     * {
         font-family: "Open Sans";
     }
+
     table {
         border-collapse: collapse;
         margin-bottom: 50px;
     }
+
     td {
         border: 1px solid #444;
         padding: 10px 15px;
     }
+
     th {
         padding: 15px;
         background-color: #fbffce;

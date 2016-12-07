@@ -5,7 +5,8 @@
  * Time: 9:07
  */
 
-namespace Akimah\Form;
+namespace FrameworkIvan\Form;
+
 
 class Property
 {

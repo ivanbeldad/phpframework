@@ -5,7 +5,8 @@
  * Time: 5:03
  */
 
-namespace Akimah\Database;
+namespace FrameworkIvan\Util;
+
 use ReflectionClass;
 
 

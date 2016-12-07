@@ -6,8 +6,9 @@
  * Time: 8:18
  */
 
-namespace Akimah\Form;
-use Akimah\Model;
+namespace FrameworkIvan\Form;
+
+use FrameworkIvan\Model;
 
 
 class Form
@@ -139,7 +140,7 @@ class Form
             default:
                 $tag->addProperty("type", "text");
         }
-        if(!$property->isNullable()) $tag->addProperty("required");
+        if (!$property->isNullable()) $tag->addProperty("required");
         return $tag;
     }
 

@@ -5,7 +5,7 @@
  * Time: 2:19
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
 
 class Table

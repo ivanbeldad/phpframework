@@ -5,12 +5,12 @@
  * Time: 3:05
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
+
+use FrameworkIvan\Util\Cloner;
 
 
-use Akimah\Database\Cloner;
-
-class ForeignKeyAccess extends ForeignKey
+class AccessForeignKey extends ForeignKey
 {
 
     public function __construct(ForeignKey $foreignKey)

@@ -5,13 +5,14 @@
  * Time: 7:55
  */
 
-namespace Akimah\Database;
-use Akimah\Model\ForeignKey;
-use Akimah\Model\Result;
-use Akimah\Model\ResultSet;
-use Akimah\Model\AccessTable;
-use Akimah\Model\Property;
-use Akimah\Model\AccessProperty;
+namespace FrameworkIvan\Database;
+
+use FrameworkIvan\Model\ForeignKey;
+use FrameworkIvan\Model\Result;
+use FrameworkIvan\Model\ResultSet;
+use FrameworkIvan\Model\AccessTable;
+use FrameworkIvan\Model\Property;
+use FrameworkIvan\Model\AccessProperty;
 
 
 class MysqlDatabase implements Database
@@ -56,7 +57,8 @@ class MysqlDatabase implements Database
         unset($this->link);
     }
 
-    public function status() {
+    public function status()
+    {
         $this->host;
         $this->user;
         $this->password;
@@ -96,7 +98,8 @@ class MysqlDatabase implements Database
 
     // INSERT UPDATE AND DELETE RECORDS
 
-    public function insert(AccessTable $structure) {
+    public function insert(AccessTable $structure)
+    {
         $tableName = $structure->getTableName();
         if ($structure->invalidInsertRequirements()) return false;
         $keys = $structure->getSettedKeys();

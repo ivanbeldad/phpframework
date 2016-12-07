@@ -5,9 +5,9 @@
  * Time: 7:57
  */
 
-namespace Akimah\Database;
-use Akimah\Model\Table;
-use Akimah\Model\AccessTable;
+namespace FrameworkIvan\Database;
+
+use FrameworkIvan\Model\AccessTable;
 
 
 interface Database

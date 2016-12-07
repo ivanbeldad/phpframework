@@ -5,7 +5,7 @@
  * Time: 19:08
  */
 
-namespace Akimah\Database;
+namespace FrameworkIvan\Database;
 
 
 class DatabaseFactory
@@ -38,7 +38,7 @@ class DatabaseFactory
     static function getConfigPath()
     {
         $var = new \ReflectionClass(DatabaseFactory::class);
-        $path = str_replace("\\". $var->getShortName() .".php", "", $var->getFileName());
+        $path = str_replace("\\" . $var->getShortName() . ".php", "", $var->getFileName());
         $path .= "\\db_conf.json";
         return $path;
     }

@@ -5,7 +5,7 @@
  * Time: 2:53
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
 
 class Order extends Model

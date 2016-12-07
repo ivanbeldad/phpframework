@@ -5,7 +5,7 @@
  * Time: 2:59
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
 
 class ForeignKey

@@ -11,10 +11,11 @@
   "require": {},
   "autoload": {
     "psr-4": {
-      "Akimah\\Model\\": "models/",
-      "Akimah\\Database\\": "databases",
-      "Akimah\\Form\\": "forms/",
-      "Akimah\\Exception\\": "exceptions/"
+      "FrameworkIvan\\Model\\": "models/",
+      "FrameworkIvan\\Database\\": "databases",
+      "FrameworkIvan\\Form\\": "forms/",
+      "FrameworkIvan\\Exception\\": "exceptions/",
+      "FrameworkIvan\\Util\\": "utils/"
     }
   }
 }

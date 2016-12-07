@@ -5,8 +5,8 @@
  * Time: 21:33
  */
 
-namespace Akimah\Model;
-use Exception;
+namespace FrameworkIvan\Model;
+
 
 class ResultSet
 {
@@ -31,7 +31,7 @@ class ResultSet
 
     /**
      * @return Result
-     * @throws Exception "There are any results."
+     * @throws EmptyResultsException "There are any results."
      */
     public function first()
     {
@@ -41,7 +41,7 @@ class ResultSet
 
     /**
      * @return Result
-     * @throws Exception
+     * @throws EmptyResultsException
      */
     public function last()
     {
@@ -62,8 +62,8 @@ class ResultSet
             if (!$a instanceof Result || !$b instanceof Result) return;
             $aValue = null;
             $bValue = null;
-            $aField =$a->getFieldByKey($key);
-            $bField =$b->getFieldByKey($key);
+            $aField = $a->getFieldByKey($key);
+            $bField = $b->getFieldByKey($key);
             if ($aField->getKey() === $key) $aValue = $aField->getValue();
             if ($bField->getKey() === $key) $bValue = $bField->getValue();
             if ($aField->getType() === Property::FIELD_DECIMAL || $aField->getType() === Property::FIELD_INT) {
@@ -180,7 +180,7 @@ class ResultSet
         foreach ($resultSet->results as $result) {
             $table .= "<tr>";
             foreach ($result->getFieldsAccess() as $fieldsAccess) {
-                $table .= "<td><span>".$fieldsAccess->getValue()."</span></td>";
+                $table .= "<td><span>" . $fieldsAccess->getValue() . "</span></td>";
             }
             $table .= "</tr>";
         }

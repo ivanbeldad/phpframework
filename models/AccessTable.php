@@ -5,7 +5,7 @@
  * Time: 8:04
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
 
 class AccessTable extends Table
@@ -25,7 +25,7 @@ class AccessTable extends Table
     private function convertFields(Table $table)
     {
         $accessFields = [];
-        foreach($table->accessProperties as $tableField) {
+        foreach ($table->accessProperties as $tableField) {
             array_push($accessFields, new AccessProperty($tableField));
         }
         return $accessFields;
@@ -51,9 +51,9 @@ class AccessTable extends Table
 
     public function invalidInsertRequirements()
     {
-        foreach($this->getProperties() as $field) {
+        foreach ($this->getProperties() as $field) {
             $value = $field->getValue();
-            if(!isset($value) || $value === "") {
+            if (!isset($value) || $value === "") {
                 if (!$field->isNullable() && !$field->isAutoIncrement() && !$field->isDefaultValue()) {
                     return true;
                 }
@@ -67,7 +67,7 @@ class AccessTable extends Table
         $names = [];
         foreach ($this->getProperties() as $tableField) {
             $value = $tableField->getValue();
-            if(isset($value) && $value !== "") {
+            if (isset($value) && $value !== "") {
                 array_push($names, $tableField->getKey());
             }
         }
@@ -82,7 +82,7 @@ class AccessTable extends Table
         $values = [];
         foreach ($this->getProperties() as $tableField) {
             $value = $tableField->getValue();
-            if(isset($value) && $value !== "") {
+            if (isset($value) && $value !== "") {
                 array_push($values, $value);
             }
         }

@@ -5,8 +5,10 @@
  * Time: 6:56
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Exception;
+
 use Exception;
+
 
 class InvalidKeyException extends Exception
 {

@@ -5,8 +5,9 @@
  * Time: 7:14
  */
 
-namespace Akimah\Model;
-use Akimah\Database\DatabaseFactory;
+namespace FrameworkIvan\Model;
+
+use FrameworkIvan\Database\DatabaseFactory;
 
 
 abstract class Model

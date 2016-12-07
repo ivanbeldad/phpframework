@@ -5,7 +5,7 @@
  * Time: 3:02
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
 
 class Hardware extends Model

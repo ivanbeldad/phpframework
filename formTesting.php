@@ -2,8 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
-use Akimah\Form\Form;
-use Akimah\Model\Hardware;
+use FrameworkIvan\Form\Form;
+use FrameworkIvan\Model\Hardware;
 
 ?>
 

@@ -5,10 +5,10 @@
  * Time: 3:38
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
+use FrameworkIvan\Util\Cloner;
 
-use Akimah\Database\Cloner;
 
 class AccessProperty extends Property
 {
@@ -95,7 +95,7 @@ class AccessProperty extends Property
      */
     public function getForeignKey()
     {
-        return new ForeignKeyAccess($this->foreignKey);
+        return new AccessForeignKey($this->foreignKey);
     }
 
     /**

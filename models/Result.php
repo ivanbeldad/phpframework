@@ -5,10 +5,10 @@
  * Time: 21:34
  */
 
-namespace Akimah\Model;
+namespace FrameworkIvan\Model;
 
+use FrameworkIvan\Database\DatabaseFactory;
 
-use Akimah\Database\DatabaseFactory;
 
 class Result
 {
