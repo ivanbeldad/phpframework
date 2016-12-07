@@ -1,7 +1,6 @@
 <?php
 
 require_once 'vendor/autoload.php';
-use \Akimah\Model;
 use \Akimah\Model\Hardware;
 use \Akimah\Model\Order;
 use \Akimah\Model\ResultSet;

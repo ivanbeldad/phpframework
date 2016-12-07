@@ -6,6 +6,7 @@
  */
 
 namespace Akimah\Database;
+use ReflectionClass;
 
 
 class Cloner
@@ -13,8 +14,8 @@ class Cloner
 
     public static function cloneProperties($reference, $destination)
     {
-        $referenceReflection = new \ReflectionClass($reference);
-        $destinationReflection = new \ReflectionClass($destination);
+        $referenceReflection = new ReflectionClass($reference);
+        $destinationReflection = new ReflectionClass($destination);
         $propertiesReference = $referenceReflection->getProperties();
         $propertiesDestination = $destinationReflection->getProperties();
 
