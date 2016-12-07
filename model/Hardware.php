@@ -20,6 +20,7 @@ class Hardware extends Model
         $fields->date("date_up");
         $fields->int("warranty")->nullable();
         $fields->email("seller_email")->nullable();
+        $fields->boolean("confirmed")->defaultValue(false);
     }
 
     protected function setTableName(&$tableName)

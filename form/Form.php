@@ -55,6 +55,15 @@ class Form
         return new HtmlTag("label", $content, ["for" => $for]);
     }
 
+    public static function checkbox($name, $properties = [])
+    {
+        if (empty($properties["id"])) $properties["id"] = $name;
+        $properties["name"] = $name;
+        $properties["type"] = "checkbox";
+        $properties["value"] = 1;
+        return new HtmlTag("input", "", $properties);
+    }
+
     public static function submit($value = "Submit", $properties = [])
     {
         $properties["value"] = $value;
@@ -123,11 +132,19 @@ class Form
             case Model\Property::FIELD_EMAIL:
                 $tag->addProperty("type", "email");
                 break;
+            case Model\Property::FIELD_BOOLEAN:
+                $tag->addProperty("type", "checkbox");
+                $tag->addProperty("value", 1);
+                break;
             default:
                 $tag->addProperty("type", "text");
         }
         if(!$property->isNullable()) $tag->addProperty("required");
         return $tag;
     }
+
+    // SELECT
+    // CHECKBOX
+    // RADIO
 
 }

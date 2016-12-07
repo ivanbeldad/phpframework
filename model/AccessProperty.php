@@ -97,7 +97,7 @@ class AccessProperty extends Property
 
     public function isDefaultValue()
     {
-        return !empty($this->defaultValue);
+        return (!empty($this->defaultValue) || $this->defaultValue === 0);
     }
 
     public function getDefaultValue()
@@ -107,7 +107,13 @@ class AccessProperty extends Property
 
     public function getDefaultValueString()
     {
-        return empty($this->defaultValue) ? "" : "DEFAULT '" . $this->defaultValue . "'";
+        if (empty($this->defaultValue) && $this->defaultValue !== 0) return "";
+        if (is_numeric($this->defaultValue)) {
+            $defaultValue = floatval($this->defaultValue);
+        } else {
+            $defaultValue = "'" . $this->defaultValue . "'";
+        }
+        return "DEFAULT " . $defaultValue;
     }
 
     public function getValue()

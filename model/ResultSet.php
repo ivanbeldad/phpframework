@@ -116,12 +116,25 @@ class ResultSet
         for ($i = 0; $i < $this->length; $i++) {
             $field = $this->results[$i]->getFieldByKey($key);
             if (!isset($field)) break;
+            $oriValue = $field->getValue();
 
-            if ($field->getType() === Property::FIELD_INT || $field->getType() === Property::FIELD_DECIMAL) {
+            if ($field->getType() === Property::FIELD_INT) {
+                $value = intval($value);
+                $oriValue = intval($oriValue);
+            }
+            if ($field->getType() === Property::FIELD_DECIMAL) {
                 $value = floatval($value);
-                $oriValue = floatval($field->getValue());
-            } else {
-                $oriValue = $field->getValue();
+                $oriValue = floatval($oriValue);
+            }
+            if ($field->getType() === Property::FIELD_BOOLEAN) {
+                if ($value === 1 || $value === true || $value === "1") {
+                    $value = 1;
+                }
+                if ($value === 0 || $value === false || $value === "0") {
+                    $value = 0;
+                    $oriValue = floatval($oriValue);
+                }
+                $oriValue = intval($oriValue);
             }
 
             if ($oriValue !== $value) {
@@ -147,6 +160,13 @@ class ResultSet
         return $this;
     }
 
+    public function deleteAll()
+    {
+        foreach ($this->results as $result) {
+            $result->delete();
+        }
+    }
+
     public static function showTable(ResultSet $resultSet)
     {
         if ($resultSet->length === 0) return "";
@@ -166,13 +186,6 @@ class ResultSet
         }
         $table .= "</table>";
         echo $table;
-    }
-
-    public function deleteMultiple()
-    {
-        foreach ($this->results as $result) {
-            $result->delete();
-        }
     }
 
     private function isEmpty()

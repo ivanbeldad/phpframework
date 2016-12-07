@@ -6,7 +6,6 @@ use \Akimah\Model;
 use \Akimah\Model\Hardware;
 use \Akimah\Model\ResultSet;
 
-
 function createHardware()
 {
     Hardware::dropTable();
@@ -16,14 +15,16 @@ function createHardware()
         "category" => "Tower",
         "price" => 140.00,
         "warranty" => 3,
-        "date_up" => "2012-09-07"
+        "date_up" => "2012-09-07",
+        "confirmed" => 1
     ])->insert();
     Hardware::create()->setProperties([
         "name" => "Intel i5 6600k",
         "category" => "Processors",
         "price" => 249.50,
         "warranty" => 2,
-        "date_up" => "2014-02-10"
+        "date_up" => "2014-02-10",
+        "confirmed" => 1
     ])->insert();
     Hardware::create()->setProperties([
         "name" => "Intel i7 6700k",
@@ -37,14 +38,16 @@ function createHardware()
         "category" => "Tower",
         "price" => 188.70,
         "warranty" => 5,
-        "date_up" => "2015-11-26"
+        "date_up" => "2015-11-26",
+        "confirmed" => 0
     ])->insert();
     Hardware::create()->setProperties([
         "name" => "Intel Celeron",
         "category" => "Processors",
         "price" => 79.95,
         "warranty" => 1,
-        "date_up" => "2009-09-02"
+        "date_up" => "2009-09-02",
+        "confirmed" => 1
     ])->insert();
 }
 
@@ -71,6 +74,9 @@ ResultSet::showTable(Hardware::all()->bigger("price", 150));
 
 echo "<h3>SORT BY DATE (NEWER FIRST)</h3>";
 ResultSet::showTable(Hardware::all()->sortBy("date_up")->reverse());
+
+echo "<h3>CONFIRMED</h3>";
+ResultSet::showTable(Hardware::all()->equals("confirmed", true));
 
 echo "<h3>PRICE < 200 ORDER BY PRICE</h3>";
 ResultSet::showTable(Hardware::all()->sortBy("price")->smaller("price", 200));

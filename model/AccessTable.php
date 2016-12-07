@@ -88,7 +88,11 @@ class AccessTable extends Table
         foreach ($this->getAccessProperties() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
-                array_push($values, "'" . $tableField->getValue() . "'");
+                if ($tableField->getType() === Property::FIELD_INT) $value = intval($value);
+                else if ($tableField->getType() === Property::FIELD_DECIMAL) $value = floatval($value);
+                else if ($tableField->getType() === Property::FIELD_BOOLEAN) $value = intval($value);
+                else $value = "'" . $value . "'";
+                array_push($values, $value);
             }
         }
         return $values;
