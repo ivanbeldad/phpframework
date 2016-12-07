@@ -16,6 +16,13 @@ class ForeignKey
     const ACTION_NO_ACTION = 3;
     const ACTION_SET_NULL = 4;
 
+    private $constraint;
+    private $referenceTable;
+    private $keyFrom;
+    private $keyTo;
+    private $onUpdate;
+    private $onDelete;
+
     public function __construct(
         $constraint,
         $fieldFrom = null,
