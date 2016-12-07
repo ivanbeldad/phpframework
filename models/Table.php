@@ -31,7 +31,7 @@ class Table implements TableCreator
         $newClone = new Table();
         $newClone->setTableName($table->tableName);
         foreach ($table->properties as $property) {
-            array_push($newClone->properties, Property::getClone($property));
+            array_push($newClone->properties, clone $property);
         }
         return $newClone;
     }

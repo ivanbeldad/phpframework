@@ -188,11 +188,4 @@ class Property implements PropertyCreator
         return $this->foreignKey;
     }
 
-    public static function getClone(Property $origin)
-    {
-        $property = new Property("", "");
-        Cloner::cloneProperties($origin, $property);
-        return $property;
-    }
-
 }

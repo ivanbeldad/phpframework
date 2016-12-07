@@ -14,8 +14,7 @@
       "FrameworkIvan\\Model\\": "models/",
       "FrameworkIvan\\Database\\": "databases",
       "FrameworkIvan\\Form\\": "forms/",
-      "FrameworkIvan\\Exception\\": "exceptions/",
-      "FrameworkIvan\\Util\\": "utils/"
+      "FrameworkIvan\\Exception\\": "exceptions/"
     }
   }
 }
