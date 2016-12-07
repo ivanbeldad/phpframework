@@ -95,7 +95,7 @@ class MysqlDatabase implements Database
         return $this->execute($query);
     }
 
-    // INSERT UPDATE AND DELETE RECORDS
+    // INSERT UPDATE AND DELETE RECORDS                                            TRY TO CHANGE TABLE BY A MODEL
 
     public function insert(Table $structure)
     {

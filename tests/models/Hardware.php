@@ -11,6 +11,11 @@ namespace FrameworkIvan\Model;
 class Hardware extends Model
 {
 
+    protected function setTableName(&$tableName)
+    {
+        $tableName = "hardware";
+    }
+
     protected function table(TableCreator &$fields)
     {
         $fields->int("id")->autoIncrement()->primaryKey();
@@ -21,11 +26,6 @@ class Hardware extends Model
         $fields->int("warranty")->nullable();
         $fields->email("seller_email")->nullable();
         $fields->boolean("confirmed")->defaultValue(false);
-    }
-
-    protected function setTableName(&$tableName)
-    {
-        $tableName = "hardware";
     }
 
 }

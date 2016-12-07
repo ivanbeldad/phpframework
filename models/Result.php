@@ -20,25 +20,25 @@ class Result
     /**
      * @var Table
      */
-    private $origin;
+    private $originTable;
 
     public function __construct(Table $table)
     {
-        $this->origin = Table::getClone($table);
+        $this->originTable = Table::getClone($table);
         $this->table = Table::getClone($table);
     }
 
     /**
      * @return Property[]
      */
-    public function getFieldsAccess()
+    public function getProperties()
     {
         return $this->table->getProperties();
     }
 
     public function getFieldByKey($key)
     {
-        foreach ($this->getFieldsAccess() as $fieldsAccess) {
+        foreach ($this->getProperties() as $fieldsAccess) {
             if (strtolower($fieldsAccess->getKey()) === strtolower($key)) {
                 return $fieldsAccess;
             }
@@ -46,6 +46,7 @@ class Result
         return null;
     }
 
+    // DUPLICATED IN MODEL
     public function setProperty($key, $value)
     {
         $this->table->getProperty($key)->setValue($value);
@@ -54,7 +55,7 @@ class Result
 
     private function setupValues($key, $value)
     {
-        foreach ($this->origin->getProperties() as $fieldAccess) {
+        foreach ($this->originTable->getProperties() as $fieldAccess) {
             if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
         }
         foreach ($this->table->getProperties() as $fieldAccess) {
@@ -79,13 +80,13 @@ class Result
     public function update()
     {
         $db = DatabaseFactory::getDatabase();
-        return $db->update($this->origin, $this->table);
+        return $db->update($this->originTable, $this->table);
     }
 
     public function delete()
     {
         $db = DatabaseFactory::getDatabase();
-        return $db->delete($this->origin);
+        return $db->delete($this->originTable);
     }
 
 }

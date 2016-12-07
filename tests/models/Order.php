@@ -11,6 +11,11 @@ namespace FrameworkIvan\Model;
 class Order extends Model
 {
 
+    protected function setTableName(&$tableName)
+    {
+        $tableName = "orders";
+    }
+
     protected function table(TableCreator &$fields)
     {
         $fields->int("id")->autoIncrement()->primaryKey();
@@ -18,11 +23,6 @@ class Order extends Model
         $fields->int("quantity")->defaultValue(1);
         $fields->datetime("datetime_order");
         $fields->string("customer_name");
-    }
-
-    protected function setTableName(&$tableName)
-    {
-        $tableName = "orders";
     }
 
 }

@@ -32,9 +32,9 @@ abstract class Model
 
     // MODEL CONSTRUCTION BY OVERWRITING
 
-    protected abstract function table(TableCreator &$fields);
-
     protected abstract function setTableName(&$tableName);
+
+    protected abstract function table(TableCreator &$fields);
 
     // ALLOW SET PROPERTIES
 

@@ -171,7 +171,7 @@ class ResultSet
     {
         if ($resultSet->length === 0) return "";
         $table = "<table border='1' style='border-collapse: collapse;'>";
-        $fields = $resultSet->first()->getFieldsAccess();
+        $fields = $resultSet->first()->getProperties();
         $table .= "<thead><tr>";
         foreach ($fields as $field) {
             $table .= "<th>" . $field->getKey() . "</th>";
@@ -179,7 +179,7 @@ class ResultSet
         $table .= "</tr></thead>";
         foreach ($resultSet->results as $result) {
             $table .= "<tr>";
-            foreach ($result->getFieldsAccess() as $fieldsAccess) {
+            foreach ($result->getProperties() as $fieldsAccess) {
                 $table .= "<td><span>" . $fieldsAccess->getValue() . "</span></td>";
             }
             $table .= "</tr>";
