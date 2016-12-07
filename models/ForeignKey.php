@@ -2,7 +2,7 @@
 /**
  * User: Ivan de la Beldad Fernandez
  * Date: 07/12/2016
- * Time: 2:59
+ * Time: 3:05
  */
 
 namespace FrameworkIvan\Model;
@@ -16,22 +16,6 @@ class ForeignKey
     const ACTION_NO_ACTION = 3;
     const ACTION_SET_NULL = 4;
 
-    protected $constraint;
-    protected $referenceTable;
-    protected $keyFrom;
-    protected $keyTo;
-    protected $onUpdate;
-    protected $onDelete;
-
-    /**
-     * ForeignKey constructor.
-     * @param $constraint
-     * @param $referenceTable
-     * @param $fieldFrom
-     * @param $fieldTo
-     * @param $onUpdate
-     * @param $onDelete
-     */
     public function __construct(
         $constraint,
         $fieldFrom = null,
@@ -47,6 +31,56 @@ class ForeignKey
         $this->onUpdate = $onUpdate;
         $this->onDelete = $onDelete;
     }
+
+    /**
+     * @return string
+     */
+    public function getConstraint()
+    {
+        return $this->constraint;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReferenceTable()
+    {
+        return $this->referenceTable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyFrom()
+    {
+        return $this->keyFrom;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeyTo()
+    {
+        return $this->keyTo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOnUpdate()
+    {
+        return $this->onUpdate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOnDelete()
+    {
+        return $this->onDelete;
+    }
+
+    // CREATOR INTERFACE
 
     public function references($table)
     {

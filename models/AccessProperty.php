@@ -95,7 +95,7 @@ class AccessProperty extends Property
      */
     public function getForeignKey()
     {
-        return new AccessForeignKey($this->foreignKey);
+        return $this->foreignKey;
     }
 
     /**

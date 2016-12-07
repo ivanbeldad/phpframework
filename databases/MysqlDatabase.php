@@ -7,12 +7,12 @@
 
 namespace FrameworkIvan\Database;
 
-use FrameworkIvan\Model\ForeignKey;
 use FrameworkIvan\Model\Result;
 use FrameworkIvan\Model\ResultSet;
 use FrameworkIvan\Model\AccessTable;
 use FrameworkIvan\Model\Property;
 use FrameworkIvan\Model\AccessProperty;
+use FrameworkIvan\Model\ForeignKey;
 
 
 class MysqlDatabase implements Database
