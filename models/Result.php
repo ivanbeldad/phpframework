@@ -29,7 +29,7 @@ class Result
     }
 
     /**
-     * @return AccessProperty[]
+     * @return Property[]
      */
     public function getFieldsAccess()
     {

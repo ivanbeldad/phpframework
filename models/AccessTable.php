@@ -12,24 +12,33 @@ class AccessTable extends Table
 {
 
     /**
-     * @var AccessProperty[]
+     * @var Property[]
      */
-    protected $accessProperties;
+    protected $properties;
 
     function __construct(Table $table)
     {
         $this->tableName = $table->tableName;
-        $this->accessProperties = $this->convertFields($table);
+        $this->properties = $this->convertFields($table);
     }
 
     private function convertFields(Table $table)
     {
         $accessFields = [];
-        foreach ($table->accessProperties as $tableField) {
-            array_push($accessFields, new AccessProperty($tableField));
+        foreach ($table->properties as $property) {
+            array_push($accessFields, Property::getClone($property));
         }
         return $accessFields;
     }
+
+//    private function convertFields(Table $table)
+//    {
+//        $accessFields = [];
+//        foreach ($table->accessProperties as $tableField) {
+//            array_push($accessFields, new AccessProperty($tableField));
+//        }
+//        return $accessFields;
+//    }
 
     public function getTableName()
     {
@@ -42,11 +51,11 @@ class AccessTable extends Table
     }
 
     /**
-     * @return AccessProperty[]
+     * @return Property[]
      */
     public function getProperties()
     {
-        return $this->accessProperties;
+        return $this->properties;
     }
 
     public function invalidInsertRequirements()
@@ -75,7 +84,7 @@ class AccessTable extends Table
     }
 
     /**
-     * @return AccessProperty[]
+     * @return Property[]
      */
     public function getSettedValues()
     {
@@ -91,7 +100,7 @@ class AccessTable extends Table
 
     public function getProperty($key)
     {
-        foreach ($this->accessProperties as $accessProperty) {
+        foreach ($this->properties as $accessProperty) {
             if ($accessProperty->getKey() === $key) return $accessProperty;
         }
         return null;

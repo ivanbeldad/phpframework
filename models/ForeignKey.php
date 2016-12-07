@@ -8,7 +8,7 @@
 namespace FrameworkIvan\Model;
 
 
-class ForeignKey
+class ForeignKey implements ForeignKeyCreator
 {
 
     const ACTION_RESTRICT = 1;
@@ -23,20 +23,14 @@ class ForeignKey
     private $onUpdate;
     private $onDelete;
 
-    public function __construct(
-        $constraint,
-        $fieldFrom = null,
-        $fieldTo = null,
-        $referenceTable = null,
-        $onUpdate = ForeignKey::ACTION_CASCADE,
-        $onDelete = ForeignKey::ACTION_RESTRICT)
+    public function __construct($constraint, $fieldFrom = null, $fieldTo = null, $referenceTable = null)
     {
         $this->constraint = $constraint;
         $this->referenceTable = $referenceTable;
         $this->keyFrom = $fieldFrom;
         $this->keyTo = $fieldTo;
-        $this->onUpdate = $onUpdate;
-        $this->onDelete = $onDelete;
+        $this->onUpdate = ForeignKey::ACTION_CASCADE;
+        $this->onDelete = ForeignKey::ACTION_RESTRICT;
     }
 
     /**

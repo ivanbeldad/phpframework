@@ -7,7 +7,7 @@
 
 namespace FrameworkIvan\Form;
 
-use FrameworkIvan\Model\AccessProperty;
+use FrameworkIvan\Model\Property;
 
 
 class HtmlTag

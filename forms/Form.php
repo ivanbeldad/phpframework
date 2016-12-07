@@ -105,7 +105,7 @@ class Form
         return $string;
     }
 
-    private static function getHtmlTagByProperty(Model\AccessProperty $property)
+    private static function getHtmlTagByProperty(Model\Property $property)
     {
         $tag = new HtmlTag("input");
         $tag->addProperty("id", $property->getKey());

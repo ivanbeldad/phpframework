@@ -11,7 +11,6 @@ use FrameworkIvan\Model\Result;
 use FrameworkIvan\Model\ResultSet;
 use FrameworkIvan\Model\AccessTable;
 use FrameworkIvan\Model\Property;
-use FrameworkIvan\Model\AccessProperty;
 use FrameworkIvan\Model\ForeignKey;
 
 
@@ -258,7 +257,7 @@ class MysqlDatabase implements Database
         }
     }
 
-    private function getValueFormatted(AccessProperty $property)
+    private function getValueFormatted(Property $property)
     {
         $value = $property->getValue();
         if ($property->getType() === Property::FIELD_INT) $value = intval($value);
@@ -268,7 +267,7 @@ class MysqlDatabase implements Database
         return $value;
     }
 
-    private function getDefaultValueFormatted(AccessProperty $property)
+    private function getDefaultValueFormatted(Property $property)
     {
         $value = $property->getDefaultValue();
         if ($property->getType() === Property::FIELD_INT) $value = intval($value);

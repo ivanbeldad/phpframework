@@ -7,8 +7,9 @@
 
 namespace FrameworkIvan\Model;
 
+use FrameworkIvan\Util\Cloner;
 
-class Property
+class Property implements PropertyCreator
 {
 
     const FIELD_INT = 1;
@@ -19,7 +20,6 @@ class Property
     const FIELD_DATETIME = 6;
     const FIELD_EMAIL = 7;
     const FIELD_BOOLEAN = 8;
-
 
     protected $key;
     protected $size;
@@ -32,6 +32,104 @@ class Property
     protected $foreignKey;
     protected $index;
     protected $unique;
+
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function getSizeString()
+    {
+        return empty($this->size) ? "" : "(" . $this->size . ")";
+    }
+
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    public function isSize()
+    {
+        $size = $this->getSize();
+        return isset($size);
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function isAutoIncrement()
+    {
+        return $this->autoIncrement;
+    }
+
+    public function isPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    public function isNullable()
+    {
+        return $this->nullable;
+    }
+
+    public function isDefaultValue()
+    {
+        return (!empty($this->defaultValue) || $this->defaultValue === 0);
+    }
+
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function isValue()
+    {
+        $value = $this->value;
+        return (isset($value) && $value !== "");
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    public function isForeignKey()
+    {
+        return isset($this->foreignKey);
+    }
+
+    /**
+     * @return ForeignKeyAccess
+     */
+    public function getForeignKey()
+    {
+        return $this->foreignKey;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUnique()
+    {
+        return $this->unique;
+    }
+
+    // CREATOR INTERFACE
 
     public function __construct($name, $type, $size = null)
     {
@@ -92,6 +190,13 @@ class Property
         $this->index();
         $this->foreignKey = new ForeignKey($name, $this->key);
         return $this->foreignKey;
+    }
+
+    public static function getClone(Property $origin)
+    {
+        $property = new Property("", "");
+        Cloner::cloneProperties($origin, $property);
+        return $property;
     }
 
 }
