@@ -7,8 +7,6 @@
 
 namespace FrameworkIvan\Form;
 
-use FrameworkIvan\Model\Property;
-
 
 class HtmlTag
 {

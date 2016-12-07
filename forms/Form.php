@@ -17,12 +17,21 @@ class Form
     public static function open($url, $method = "POST")
     {
         $string = "<form action='$url' method='$method'>";
+        $string .= "<fieldset>";
         return $string;
     }
 
     public static function close()
     {
-        return "</form>";
+        $string = "</fieldset>";
+        $string .= "</form>";
+        return $string;
+    }
+
+    public static function legend($title)
+    {
+        $string = "<legend>$title</legend>";
+        return $string;
     }
 
     public static function text($name, $placeholder = "", $properties = [])
@@ -45,9 +54,9 @@ class Form
 
     public static function date($name, $properties = [])
     {
+        $properties["type"] = "date";
         if (empty($properties["id"])) $properties["id"] = $name;
         $properties["name"] = $name;
-        $properties["type"] = "date";
         return new HtmlTag("input", "", $properties);
     }
 
@@ -58,10 +67,19 @@ class Form
 
     public static function checkbox($name, $properties = [])
     {
+        $properties["type"] = "checkbox";
         if (empty($properties["id"])) $properties["id"] = $name;
         $properties["name"] = $name;
-        $properties["type"] = "checkbox";
         $properties["value"] = 1;
+        return new HtmlTag("input", "", $properties);
+    }
+
+    public static function radio($name, $value, $properties = [])
+    {
+        $properties["type"] = "radio";
+        if (empty($properties["id"])) $properties["id"] = $name . "_" . $value;
+        $properties["name"] = $name;
+        $properties["value"] = $value;
         return new HtmlTag("input", "", $properties);
     }
 
@@ -84,7 +102,6 @@ class Form
         $htmlTags = [];
         array_push($htmlTags, Form::open($url, $method));
         $structure = $object->getTable();
-        array_push($htmlTags, "<fieldset>");
         array_push($htmlTags, "<legend>" . ucfirst($structure->getTableName()) . "</legend>");
         foreach ($structure->getProperties() as $property) {
             array_push($htmlTags, "<div>");
@@ -96,7 +113,6 @@ class Form
         array_push($htmlTags, Form::submit());
         array_push($htmlTags, Form::reset());
         array_push($htmlTags, "</div>");
-        array_push($htmlTags, "</fieldset>");
         array_push($htmlTags, Form::close());
         $string = "";
         foreach ($htmlTags as $tag) {
@@ -145,7 +161,5 @@ class Form
     }
 
     // SELECT
-    // CHECKBOX
-    // RADIO
 
 }

@@ -94,4 +94,17 @@ use FrameworkIvan\Model\Hardware;
     <section>
         <?= Form::model(new Hardware(), "here") ?>
     </section>
+    <section>
+        <?php
+
+        echo Form::open("here");
+        echo Form::legend("Custom Form");
+        echo Form::label("genre_male", "Hombre");
+        echo Form::radio("genre", "male");
+        echo Form::label("genre_male", "Mujer");
+        echo Form::radio("genre", "female");
+        echo Form::close();
+
+        ?>
+    </section>
 </main>
