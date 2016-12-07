@@ -85,7 +85,7 @@ class Form
         $structure = $object->getStructure();
         array_push($htmlTags, "<fieldset>");
         array_push($htmlTags, "<legend>" . ucfirst($structure->getTableName()) . "</legend>");
-        foreach ($structure->getAccessProperties() as $property) {
+        foreach ($structure->getProperties() as $property) {
             array_push($htmlTags, "<div>");
             array_push($htmlTags, Form::label($property->getKey(), ucfirst($property->getKey())));
             array_push($htmlTags, Form::getHtmlTagByProperty($property));

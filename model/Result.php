@@ -33,7 +33,7 @@ class Result
      */
     public function getFieldsAccess()
     {
-        return $this->structure->getAccessProperties();
+        return $this->structure->getProperties();
     }
 
     public function getFieldByKey($key)
@@ -54,10 +54,10 @@ class Result
 
     private function setupValues($key, $value)
     {
-        foreach ($this->origin->getAccessProperties() as $fieldAccess) {
+        foreach ($this->origin->getProperties() as $fieldAccess) {
             if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
         }
-        foreach ($this->structure->getAccessProperties() as $fieldAccess) {
+        foreach ($this->structure->getProperties() as $fieldAccess) {
             if ($fieldAccess->getKey() === $key) $fieldAccess->setValue($value);
         }
     }

@@ -39,7 +39,7 @@ abstract class Model
 
     public function setProperty($key, $value)
     {
-        foreach ($this->structure->getAccessProperties() as $tableField) {
+        foreach ($this->structure->getProperties() as $tableField) {
             if ($tableField->getKey() === $key) {
                 $tableField->setValue($value);
             }

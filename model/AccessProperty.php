@@ -8,18 +8,14 @@
 namespace Akimah\Model;
 
 
+use Akimah\Database\Cloner;
+
 class AccessProperty extends Property
 {
 
     public function __construct(Property $tableField)
     {
-        $this->key = $tableField->key;
-        $this->type = $tableField->type;
-        $this->size = $tableField->size;
-        $this->nullable = $tableField->nullable;
-        $this->autoIncrement = $tableField->autoIncrement;
-        $this->primaryKey = $tableField->primaryKey;
-        $this->defaultValue = $tableField->defaultValue;
+        Cloner::cloneProperties($tableField, $this);
     }
 
     public function getKey()
@@ -37,47 +33,15 @@ class AccessProperty extends Property
         return $this->size;
     }
 
+    public function isSize()
+    {
+        $size = $this->getSize();
+        return isset($size);
+    }
+
     public function getType()
     {
         return $this->type;
-    }
-
-    public function getTypeString()
-    {
-        switch ($this->type) {
-            case Property::FIELD_STRING:
-                return "VARCHAR";
-            case Property::FIELD_EMAIL:
-                return "VARCHAR";
-            case Property::FIELD_DATE:
-                return "DATE";
-            case Property::FIELD_TIME:
-                return "TIME";
-            case Property::FIELD_DATETIME:
-                return "DATETIME";
-            case Property::FIELD_DECIMAL:
-                return "DECIMAL";
-            case Property::FIELD_INT:
-                return "INT";
-            case Property::FIELD_BOOLEAN:
-                return "BIT";
-        }
-        return $this->type;
-    }
-
-    public function isAutoIncrementString()
-    {
-        return $this->autoIncrement ? "AUTO_INCREMENT" : "";
-    }
-
-    public function isPrimaryKeyString()
-    {
-        return $this->primaryKey ? "PRIMARY KEY" : "";
-    }
-
-    public function isNullableString()
-    {
-        return $this->nullable ? "" : "NOT NULL";
     }
 
     public function isAutoIncrement()
@@ -105,20 +69,15 @@ class AccessProperty extends Property
         return $this->defaultValue;
     }
 
-    public function getDefaultValueString()
-    {
-        if (empty($this->defaultValue) && $this->defaultValue !== 0) return "";
-        if (is_numeric($this->defaultValue)) {
-            $defaultValue = floatval($this->defaultValue);
-        } else {
-            $defaultValue = "'" . $this->defaultValue . "'";
-        }
-        return "DEFAULT " . $defaultValue;
-    }
-
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function isValue()
+    {
+        $value = $this->value;
+        return (isset($value) && $value !== "");
     }
 
     public function setValue($value)
@@ -126,16 +85,33 @@ class AccessProperty extends Property
         $this->value = $value;
     }
 
-    public function toString()
+    public function isForeignKey()
     {
-        $string = "";
-        $string .= "Name: " . $this->key . "<br>";
-        $string .= "Size: " . $this->size . "<br>";
-        $string .= "Type: " . $this->type . "<br>";
-        $string .= "AutoIncrement: " . $this->autoIncrement . "<br>";
-        $string .= "Primary Key: " . $this->primaryKey . "<br>";
-        $string .= "Nullable: " . $this->nullable . "<br>";
-        return $string;
+        return isset($this->foreignKey);
+    }
+
+    /**
+     * @return ForeignKeyAccess
+     */
+    public function getForeignKey()
+    {
+        return new ForeignKeyAccess($this->foreignKey);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUnique()
+    {
+        return $this->unique;
     }
 
 }

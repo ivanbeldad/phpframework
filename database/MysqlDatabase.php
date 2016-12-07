@@ -6,9 +6,11 @@
  */
 
 namespace Akimah\Database;
+use Akimah\Model\ForeignKey;
 use Akimah\Model\Result;
 use Akimah\Model\ResultSet;
 use Akimah\Model\AccessTable;
+use Akimah\Model\Property;
 use Akimah\Model\AccessProperty;
 
 
@@ -80,17 +82,9 @@ class MysqlDatabase implements Database
 
     public function createTable(AccessTable $structure)
     {
-        $tableName = $structure->getTableName();
-        $fields = $structure->getAccessProperties();
-        $query = "CREATE TABLE $tableName (";
-        $stringFields = [];
-        foreach ($fields as $field) {
-            array_push($stringFields, $this->createTableField($field));
-        }
-        $stringFields = join(" , ", $stringFields);
-        $query .= $stringFields;
-        $query .= ");";
-        return $this->execute($query);
+        $this->createFields($structure);
+        $this->addIndexes($structure);
+        $this->addForeignKeys($structure);
     }
 
     public function dropTable(AccessTable $structure)
@@ -107,8 +101,13 @@ class MysqlDatabase implements Database
         if ($structure->invalidInsertRequirements()) return false;
         $keys = $structure->getSettedKeys();
         $keys = join(",", $keys);
-        $values = $structure->getSettedValues();
-        $values = join(",", $values);
+        $values = $structure->getProperties();
+        foreach ($values as $value) {
+            if ($value->isValue()) {
+                $value->setValue($this->getValueFormatted($value));
+            }
+        }
+        $values = join(",", $structure->getSettedValues());
         $query = "INSERT INTO " . $tableName . " ($keys) VALUES ($values)";
         return $this->execute($query);
     }
@@ -151,6 +150,60 @@ class MysqlDatabase implements Database
 
     // PRIVATE USAGE
 
+    private function createFields(AccessTable $structure)
+    {
+        $table = $structure->getTableName();
+        $properties = $structure->getProperties();
+        $propertiesStrings = [];
+        foreach ($properties as $property) {
+            $key = $property->getKey();
+            $type = $this->getTypeString($property->getType());
+            $size = $property->isSize() ? "(" . $property->getSize() . ")" : "";
+            $nullable = $property->isNullable() ? "" : "NOT NULL";
+            $unique = $property->isUnique() ? "UNIQUE" : "";
+            $primaryKey = $property->isPrimaryKey() ? "PRIMARY KEY" : "";
+            $autoIncrement = $property->isAutoIncrement() ? "AUTO_INCREMENT" : "";
+            $defaultValue = $property->isDefaultValue() ? "DEFAULT " . $this->getDefaultValueFormatted($property) : "";
+            $string = "$key $type $size $nullable $unique $defaultValue $primaryKey $autoIncrement";
+            array_push($propertiesStrings, $string);
+        }
+        $propertiesStrings = join(" , ", $propertiesStrings);
+        $query = "CREATE TABLE $table ($propertiesStrings)";
+        $this->execute($query);
+    }
+
+    private function addForeignKeys(AccessTable $structure)
+    {
+        $table = $structure->getTableName();
+        $properties = $structure->getProperties();
+        foreach ($properties as $property) {
+            if ($property->isForeignKey()) {
+                $foreignKey = $property->getForeignKey();
+                $constraint = $foreignKey->getConstraint();
+                $keyFrom = $foreignKey->getKeyFrom();
+                $keyTo = $foreignKey->getKeyTo();
+                $references = $foreignKey->getReferenceTable();
+                $query = "ALTER TABLE $table ADD CONSTRAINT $constraint FOREIGN KEY ($keyFrom) REFERENCES $references($keyTo)";
+                $query .= " ON UPDATE " . $this->getActionFormatted($foreignKey->getOnUpdate());
+                $query .= " ON DELETE " . $this->getActionFormatted($foreignKey->getOnDelete());
+                $this->execute($query);
+            }
+        }
+    }
+
+    private function addIndexes(AccessTable $structure)
+    {
+        $table = $structure->getTableName();
+        $properties = $structure->getProperties();
+        foreach ($properties as $property) {
+            if ($property->isIndex()) {
+                $key = $property->getKey();
+                $query = "ALTER TABLE $table ADD INDEX ($key)";
+                $this->execute($query);
+            }
+        }
+    }
+
     private function setValuesString(AccessTable $structure)
     {
         $structureString = [];
@@ -178,16 +231,64 @@ class MysqlDatabase implements Database
         return $structureString;
     }
 
-    private function createTableField(AccessProperty $field)
+    private function getTypeString($type)
     {
-        $string = "";
-        $string .= $field->getKey() . " ";
-        $string .= $field->getTypeString() . $field->getSizeString() . " ";
-        $string .= $field->isAutoIncrementString() . " ";
-        $string .= $field->isPrimaryKeyString() . " ";
-        $string .= $field->isNullableString() . " ";
-        $string .= $field->getDefaultValueString() . " ";
-        return $string;
+        switch ($type) {
+            case Property::FIELD_STRING:
+                return "VARCHAR";
+            case Property::FIELD_EMAIL:
+                return "VARCHAR";
+            case Property::FIELD_DATE:
+                return "DATE";
+            case Property::FIELD_TIME:
+                return "TIME";
+            case Property::FIELD_DATETIME:
+                return "DATETIME";
+            case Property::FIELD_DECIMAL:
+                return "DECIMAL";
+            case Property::FIELD_INT:
+                return "INT";
+            case Property::FIELD_BOOLEAN:
+                return "BINARY";
+            default:
+                return "VARCHAR";
+        }
+    }
+
+    private function getValueFormatted(AccessProperty $property)
+    {
+        $value = $property->getValue();
+        if ($property->getType() === Property::FIELD_INT) $value = intval($value);
+        else if ($property->getType() === Property::FIELD_DECIMAL) $value = floatval($value);
+        else if ($property->getType() === Property::FIELD_BOOLEAN) $value = intval($value);
+        else $value = "'" . $value . "'";
+        return $value;
+    }
+
+    private function getDefaultValueFormatted(AccessProperty $property)
+    {
+        $value = $property->getDefaultValue();
+        if ($property->getType() === Property::FIELD_INT) $value = intval($value);
+        else if ($property->getType() === Property::FIELD_DECIMAL) $value = floatval($value);
+        else if ($property->getType() === Property::FIELD_BOOLEAN) $value = intval($value);
+        else $value = "'" . $value . "'";
+        return $value;
+    }
+
+    private function getActionFormatted($action)
+    {
+        switch ($action) {
+            case ForeignKey::ACTION_RESTRICT:
+                return "RESTRICT";
+            case ForeignKey::ACTION_CASCADE:
+                return "CASCADE";
+            case ForeignKey::ACTION_NO_ACTION:
+                return "NO ACTION";
+            case ForeignKey::ACTION_SET_NULL:
+                return "SET NULL";
+            default:
+                "RESTRICT";
+        }
     }
 
 }

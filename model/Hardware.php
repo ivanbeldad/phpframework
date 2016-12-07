@@ -14,9 +14,9 @@ class Hardware extends Model
     protected function table(Table &$fields)
     {
         $fields->int("id")->autoIncrement()->primaryKey();
-        $fields->string("name", "100");
-        $fields->decimal("price")->defaultValue("100");
-        $fields->string("category")->nullable();
+        $fields->string("name", "100")->unique();
+        $fields->decimal("price")->defaultValue(999);
+        $fields->string("category")->nullable()->index();
         $fields->date("date_up");
         $fields->int("warranty")->nullable();
         $fields->email("seller_email")->nullable();

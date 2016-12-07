@@ -20,6 +20,7 @@ class Property
     const FIELD_EMAIL = 7;
     const FIELD_BOOLEAN = 8;
 
+
     protected $key;
     protected $size;
     protected $type;
@@ -28,6 +29,9 @@ class Property
     protected $nullable;
     protected $defaultValue;
     protected $value;
+    protected $foreignKey;
+    protected $index;
+    protected $unique;
 
     public function __construct($name, $type, $size = null)
     {
@@ -37,18 +41,15 @@ class Property
         $this->nullable = false;
         $this->autoIncrement = false;
         $this->primaryKey = false;
+        $this->index = false;
+        $this->unique = false;
         $this->defaultValue = "";
+        $this->foreignKey = null;
     }
 
     public function autoIncrement()
     {
         $this->autoIncrement = true;
-        return $this;
-    }
-
-    public function primaryKey()
-    {
-        $this->primaryKey = true;
         return $this;
     }
 
@@ -64,6 +65,29 @@ class Property
         if ($value === false) $value = 0;
         $this->defaultValue = $value;
         return $this;
+    }
+
+    public function unique()
+    {
+        $this->unique = true;
+    }
+
+    public function index()
+    {
+        $this->index = true;
+    }
+
+    public function primaryKey()
+    {
+        $this->primaryKey = true;
+        return $this;
+    }
+
+    public function foreignKey($name)
+    {
+        $this->index();
+        $this->foreignKey = new ForeignKey($name, $this->key);
+        return $this->foreignKey;
     }
 
 }

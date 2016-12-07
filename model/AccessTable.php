@@ -44,22 +44,14 @@ class AccessTable extends Table
     /**
      * @return AccessProperty[]
      */
-    public function getAccessProperties()
+    public function getProperties()
     {
         return $this->accessProperties;
     }
 
-    public function showAll()
-    {
-        foreach ($this->getAccessProperties() as $field) {
-            if (!$field instanceof AccessProperty) return;
-            echo $field->toString() . "<br>";
-        }
-    }
-
     public function invalidInsertRequirements()
     {
-        foreach($this->getAccessProperties() as $field) {
+        foreach($this->getProperties() as $field) {
             $value = $field->getValue();
             if(!isset($value) || $value === "") {
                 if (!$field->isNullable() && !$field->isAutoIncrement() && !$field->isDefaultValue()) {
@@ -73,7 +65,7 @@ class AccessTable extends Table
     public function getSettedKeys()
     {
         $names = [];
-        foreach ($this->getAccessProperties() as $tableField) {
+        foreach ($this->getProperties() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
                 array_push($names, $tableField->getKey());
@@ -82,16 +74,15 @@ class AccessTable extends Table
         return $names;
     }
 
+    /**
+     * @return AccessProperty[]
+     */
     public function getSettedValues()
     {
         $values = [];
-        foreach ($this->getAccessProperties() as $tableField) {
+        foreach ($this->getProperties() as $tableField) {
             $value = $tableField->getValue();
             if(isset($value) && $value !== "") {
-                if ($tableField->getType() === Property::FIELD_INT) $value = intval($value);
-                else if ($tableField->getType() === Property::FIELD_DECIMAL) $value = floatval($value);
-                else if ($tableField->getType() === Property::FIELD_BOOLEAN) $value = intval($value);
-                else $value = "'" . $value . "'";
                 array_push($values, $value);
             }
         }
