@@ -96,6 +96,15 @@ class Form
         return new HtmlTag("input", "", $properties);
     }
 
+    public static function hidden($name, $value, $properties = [])
+    {
+        if (empty($properties["id"])) $properties["id"] = $name;
+        $properties["name"] = $name;
+        $properties["type"] = "hidden";
+        $properties["value"] = $value;
+        return new HtmlTag("input", "", $properties);
+    }
+
     public static function submit($value = "Submit", $properties = [])
     {
         $properties["value"] = $value;
@@ -137,6 +146,7 @@ class Form
         $structure = $object->getTable();
         array_push($htmlTags, "<legend>" . ucfirst($structure->getTableName()) . "</legend>");
         foreach ($structure->getProperties() as $property) {
+            if ($property->isAutoIncrement()) continue;
             array_push($htmlTags, "<div>");
             array_push($htmlTags, Form::label($property->getKey(), ucfirst($property->getKey())));
             array_push($htmlTags, Form::getHtmlTagByProperty($property));
