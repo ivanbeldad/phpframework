@@ -33,4 +33,6 @@ interface Database
 
     function all(Table $structure);
 
+    function where(Table $structure, $key, $value, $operator);
+
 }

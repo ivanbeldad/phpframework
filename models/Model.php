@@ -89,12 +89,11 @@ abstract class Model
         return $db->all($object->table);
     }
 
-    static function find($id)
+    public static function where($key, $value, $operator = "=")
     {
         $object = new static();
-        $database = DatabaseFactory::getDatabase();
-        echo $query = "SELECT * FROM " . $object->table->getTableName() . " WHERE id = '$id'";
-        return $database->execute($query);
+        $db = DatabaseFactory::getDatabase();
+        return $db->where($object->table, $key, $value, $operator);
     }
 
     // FORMS

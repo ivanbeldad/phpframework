@@ -150,6 +150,28 @@ class MysqlDatabase implements Database
         return $resultSet;
     }
 
+    /**
+     * @param Table $structure
+     * @param $key
+     * @param $value
+     * @param $operator
+     * @return ResultSet
+     */
+    function where(Table $structure, $key, $value, $operator)
+    {
+        if (!is_numeric($value)) {
+            $value = "'" . $value . "'";
+        }
+        $tableName = $structure->getTableName();
+        $query = "SELECT * FROM $tableName WHERE $key $operator $value";
+        $result = $this->execute($query);
+        $resultSet = new ResultSet();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $resultSet->addResult(Result::assocArrayToResult($structure, $row));
+        }
+        return $resultSet;
+    }
+
     // PRIVATE USAGE
 
     private function createFields(Table $structure)
