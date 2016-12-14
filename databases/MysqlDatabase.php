@@ -170,7 +170,7 @@ class MysqlDatabase implements Database
             array_push($propertiesStrings, $string);
         }
         $propertiesStrings = join(" , ", $propertiesStrings);
-        $query = "CREATE TABLE $table ($propertiesStrings)";
+        echo $query = "CREATE TABLE $table ($propertiesStrings)";
         $this->execute($query);
     }
 
@@ -252,6 +252,8 @@ class MysqlDatabase implements Database
                 return "INT";
             case Property::FIELD_BOOLEAN:
                 return "BINARY";
+            case Property::FIELD_IMAGE:
+                return "BLOB";
             default:
                 return "VARCHAR";
         }
@@ -260,10 +262,22 @@ class MysqlDatabase implements Database
     private function getValueFormatted(Property $property)
     {
         $value = $property->getValue();
-        if ($property->getType() === Property::FIELD_INT) $value = intval($value);
-        else if ($property->getType() === Property::FIELD_DECIMAL) $value = floatval($value);
-        else if ($property->getType() === Property::FIELD_BOOLEAN) $value = intval($value);
-        else $value = "'" . $value . "'";
+        switch ($property->getType()) {
+            case Property::FIELD_INT:
+                $value = intval($value);
+                break;
+            case Property::FIELD_DECIMAL:
+                $value = floatval($value);
+                break;
+            case Property::FIELD_BOOLEAN:
+                $value = intval($value);
+                break;
+            case Property::FIELD_IMAGE:
+                $value = addslashes(file_get_contents($value));
+                break;
+            default:
+                $value = "'" . $value . "'";
+        }
         return $value;
     }
 

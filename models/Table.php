@@ -203,4 +203,15 @@ class Table implements TableCreator
         return $newField;
     }
 
+    /**
+     * @param string $name
+     * @return PropertyCreator
+     */
+    public function image($name)
+    {
+        $newField = new Property($name, Property::FIELD_IMAGE);
+        array_push($this->properties, $newField);
+        return $newField;
+    }
+
 }

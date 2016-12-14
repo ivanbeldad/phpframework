@@ -20,6 +20,7 @@ class Property implements PropertyCreator
     const FIELD_DATETIME = 6;
     const FIELD_EMAIL = 7;
     const FIELD_BOOLEAN = 8;
+    const FIELD_IMAGE = 9;
 
     protected $key;
     protected $size;
@@ -87,6 +88,15 @@ class Property implements PropertyCreator
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function getValueFormatted()
+    {
+        if ($this->type === Property::FIELD_IMAGE) {
+            return "<img src='data:image/jpeg;base64, " . base64_encode($this->value) . "'>";
+        } else {
+            return $this->getValue();
+        }
     }
 
     public function isValue()

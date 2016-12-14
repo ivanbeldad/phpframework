@@ -30,6 +30,14 @@ class ResultSet
     }
 
     /**
+     * @return Result[]
+     */
+    public function getResults()
+    {
+        return $this->results;
+    }
+
+    /**
      * @return Result
      * @throws EmptyResultsException "There are any results."
      */
@@ -47,6 +55,28 @@ class ResultSet
     {
         if ($this->isEmpty()) throw new EmptyResultsException();
         return $this->results[$this->length - 1];
+    }
+
+    /**
+     * @param quantity
+     * @return ResultSet
+     * @throws EmptyResultsException
+     */
+    public function from($position)
+    {
+        array_splice($this->results, 0, $position);
+        return $this;
+    }
+
+    /**
+     * @param quantity
+     * @return ResultSet
+     * @throws EmptyResultsException
+     */
+    public function limit($quantity)
+    {
+        array_splice($this->results, $quantity);
+        return $this;
     }
 
     /**
@@ -180,7 +210,7 @@ class ResultSet
         foreach ($resultSet->results as $result) {
             $table .= "<tr>";
             foreach ($result->getProperties() as $fieldsAccess) {
-                $table .= "<td><span>" . $fieldsAccess->getValue() . "</span></td>";
+                $table .= "<td><span>" . $fieldsAccess->getValueFormatted() . "</span></td>";
             }
             $table .= "</tr>";
         }

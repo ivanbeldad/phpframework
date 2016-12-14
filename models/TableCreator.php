@@ -64,4 +64,10 @@ interface TableCreator
      */
     public function boolean($name);
 
+    /**
+     * @param string $name
+     * @return PropertyCreator
+     */
+    public function image($name);
+
 }
