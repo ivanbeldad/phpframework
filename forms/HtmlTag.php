@@ -78,4 +78,25 @@ class HtmlTag
         return $string;
     }
 
+    /**
+     * @return string
+     */
+    public function toStringOpenTag()
+    {
+        $oneReplace = 1;
+        $string = "<" . $this->element . ">" . $this->content;
+        foreach ($this->properties as $property) {
+            $string = str_replace(">", " " . $property . ">", $string, $oneReplace);
+        }
+        return $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function toStringCloseTag()
+    {
+        return "</" . $this->element . ">";
+    }
+
 }

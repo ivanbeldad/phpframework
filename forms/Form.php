@@ -14,9 +14,14 @@ use FrameworkIvan\Model;
 class Form
 {
 
-    public static function open($url, $method = "POST")
+    public static function open($url, $method = "POST", $allowFiles = false)
     {
-        $string = "<form action='$url' method='$method'>";
+        if ($allowFiles) {
+            $encode = "multipart/form-data";
+        } else {
+            $encode = "application/x-www-form-urlencoded";
+        }
+        $string = "<form action='$url' method='$method' enctype='$encode'>";
         $string .= "<fieldset>";
         return $string;
     }
@@ -49,6 +54,7 @@ class Form
         if (empty($properties["id"])) $properties["id"] = $name;
         $properties["name"] = $name;
         $properties["type"] = "number";
+        $properties["step"] = "any";
         return new HtmlTag("input", "", $properties);
     }
 
@@ -70,7 +76,6 @@ class Form
         $properties["type"] = "checkbox";
         if (empty($properties["id"])) $properties["id"] = $name;
         $properties["name"] = $name;
-        $properties["value"] = 1;
         return new HtmlTag("input", "", $properties);
     }
 
@@ -80,6 +85,14 @@ class Form
         if (empty($properties["id"])) $properties["id"] = $name . "_" . $value;
         $properties["name"] = $name;
         $properties["value"] = $value;
+        return new HtmlTag("input", "", $properties);
+    }
+
+    public static function file($name, $properties = [])
+    {
+        if (empty($properties["id"])) $properties["id"] = $name;
+        $properties["name"] = $name;
+        $properties["type"] = "file";
         return new HtmlTag("input", "", $properties);
     }
 
@@ -97,10 +110,30 @@ class Form
         return new HtmlTag("input", "", $properties);
     }
 
+    public static function selectOpen($name, $properties = [])
+    {
+        if (empty($properties["id"])) $properties["id"] = $name;
+        $properties["name"] = $name;
+        $tag = new HtmlTag("select", "", $properties);
+        return $tag->toStringOpenTag();
+    }
+
+    public static function selectClose()
+    {
+        $tag = new HtmlTag("select", "");
+        return $tag->toStringCloseTag();
+    }
+
+    public static function option($value, $content, $properties = [])
+    {
+        $properties["value"] = $value;
+        return new HtmlTag("option", $content , $properties);
+    }
+
     public static function model(Model\Model $object, $url, $method = "POST")
     {
         $htmlTags = [];
-        array_push($htmlTags, Form::open($url, $method));
+        array_push($htmlTags, Form::open($url, $method, true));
         $structure = $object->getTable();
         array_push($htmlTags, "<legend>" . ucfirst($structure->getTableName()) . "</legend>");
         foreach ($structure->getProperties() as $property) {
@@ -153,13 +186,14 @@ class Form
                 $tag->addProperty("type", "checkbox");
                 $tag->addProperty("value", 1);
                 break;
+            case Model\Property::FIELD_IMAGE:
+                $tag->addProperty("type", "file");
+                break;
             default:
                 $tag->addProperty("type", "text");
         }
         if (!$property->isNullable()) $tag->addProperty("required");
         return $tag;
     }
-
-    // SELECT
 
 }
